@@ -25,8 +25,8 @@
             color: #8e8e93;
             margin-bottom: 12px;
         }
-        /* Date Selector Bar */
-        .date-bar {
+        /* Date & Action Bar */
+        .control-bar {
             background: #ffffff;
             border-radius: 12px;
             padding: 10px 14px;
@@ -36,13 +36,20 @@
             align-items: center;
             box-shadow: 0 1px 3px rgba(0,0,0,0.06);
             border: 1px solid #e5e5ea;
+            gap: 10px;
+            flex-wrap: wrap;
         }
-        .date-bar label {
+        .control-bar div {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .control-bar label {
             font-size: 13px;
             font-weight: 700;
             color: #3a3a3c;
         }
-        .date-bar input[type="date"] {
+        .control-bar input[type="date"] {
             padding: 6px 10px;
             font-size: 14px;
             border: 1px solid #c7c7cc;
@@ -51,6 +58,16 @@
             background: #f8f8f6;
             color: #1c1c1e;
             font-weight: 600;
+        }
+        .action-btn {
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 7px 12px;
+            font-weight: 600;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
         }
 
         /* Summary Dashboard Box */
@@ -226,17 +243,68 @@
             font-size: 13px;
             cursor: pointer;
         }
+
+        /* Print-specific layout styling */
+        @media print {
+            body {
+                background: white;
+                color: black;
+                padding: 0;
+            }
+            .control-bar, .dashboard, .ns-btn, input[type="checkbox"], input[type="text"] {
+                display: none !important;
+            }
+            .card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+                break-inside: avoid;
+                margin-bottom: 8px;
+                padding: 8px 12px;
+                opacity: 1 !important;
+            }
+            .level-header {
+                font-size: 15px;
+                margin-top: 16px;
+                border-bottom: 1px solid black;
+            }
+            .print-header {
+                display: block !important;
+                text-align: center;
+                margin-bottom: 15px;
+            }
+            .print-only-val {
+                display: inline-block !important;
+                font-weight: bold;
+                font-size: 14px;
+            }
+        }
+        .print-header {
+            display: none;
+        }
+        .print-only-val {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
+    <div class="print-header">
+        <h1>Angels Stadium Fryer Service Report</h1>
+        <div id="print-date-label" style="font-size: 14px; font-weight: bold; margin-top: 4px;"></div>
+    </div>
+
     <h1>Angels Stadium Fryers</h1>
     <div class="subtitle">Service Tracker</div>
 
-    <!-- Date Bar Selector -->
-    <div class="date-bar">
-        <label for="shift-date">Shift Log Date:</label>
-        <input type="date" id="shift-date" onchange="changeDate(this.value)">
+    <!-- Date Bar Selector & Print/Export Button -->
+    <div class="control-bar">
+        <div>
+            <label for="shift-date">Shift Date:</label>
+            <input type="date" id="shift-date" onchange="changeDate(this.value)">
+        </div>
+        <div>
+            <button class="action-btn" onclick="printReport()">🖨️ Print / Save PDF</button>
+        </div>
     </div>
 
     <!-- Summary Dashboard Box -->
@@ -299,10 +367,7 @@
             ]}
         ];
 
-        // Master storage structure: { "YYYY-MM-DD": { standId: { filter, dump, oil, done } } }
-        let allLogs = JSON.parse(localStorage.getItem('angels_fryer_logs_v6')) || {};
-
-        // Default to today's local date string (YYYY-MM-DD)
+        let allLogs = JSON.parse(localStorage.getItem('angels_fryer_logs_v8')) || {};
         let currentDate = new Date().toLocaleDateString('en-CA');
         document.getElementById('shift-date').value = currentDate;
 
@@ -317,6 +382,11 @@
             if (!newDateStr) return;
             currentDate = newDateStr;
             render();
+        }
+
+        function printReport() {
+            document.getElementById('print-date-label').innerText = `Date: ${currentDate}`;
+            window.print();
         }
 
         function render() {
@@ -352,7 +422,10 @@
                                 <input type="checkbox" id="check-${safeId}" ${isDone ? 'checked' : ''} onchange="toggleDone('${stand.id}', this.checked)">
                                 <span class="stand-title">${stand.id}</span>
                             </div>
-                            <span class="badge ${badgeClass}">${stand.size} lb (${stand.total} max)</span>
+                            <div>
+                                <span class="print-only-val">Filtered: ${filterVal || '0'} | Dumped: ${dumpVal || '0'} | Oil: ${oilVal || '0'}gal</span>
+                                <span class="badge ${badgeClass}">${stand.size} lb (${stand.total} max)</span>
+                            </div>
                         </div>
                         
                         <!-- Filter Row -->
@@ -452,7 +525,7 @@
         }
 
         function saveLogs() {
-            localStorage.setItem('angels_fryer_logs_v6', JSON.stringify(allLogs));
+            localStorage.setItem('angels_fryer_logs_v8', JSON.stringify(allLogs));
         }
 
         function findStand(id) {
@@ -556,3 +629,4 @@
     </script>
 </body>
 </html>
+
