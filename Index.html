@@ -756,7 +756,7 @@
 
             let dayState = getCurrentDateState();
             if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
-            if (dayState[id].isNS) return; // Ignore if marked NS
+            if (dayState[id].isNS) return;
 
             let currentVal = parseNum(dayState[id][field]);
             let newVal = currentVal + delta;
@@ -766,7 +766,6 @@
 
             saveLogs();
             
-            // Update input element and validation directly without re-rendering everything
             const safeId = id.replace(/[^a-zA-Z0-9]/g, '_');
             const inputEl = document.getElementById(`input-${field}-${safeId}`);
             if (inputEl) {
@@ -796,12 +795,20 @@
         }
 
         function handleOil(id, value) {
+            let dayState = getCurrentDataStateSafe(id, value);
+        }
+
+        function getDayStateDirect(id, value) {
             let dayState = getCurrentDateState();
             if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
             dayState[id].oil = value;
             saveLogs();
             updateTotals();
-            render();
+            // Removed the full re-render() call here so typing into the oil field won't wipe focus or scroll the page!
+        }
+
+        function getCurrentDataStateSafe(id, value) {
+            getDayStateDirect(id, value);
         }
 
         function saveLogs() {
