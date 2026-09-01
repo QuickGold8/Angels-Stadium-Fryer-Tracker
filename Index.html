@@ -241,10 +241,29 @@
         }
         .input-group {
             display: flex;
-            gap: 6px;
+            align-items: center;
+            gap: 4px;
+        }
+        .stepper-btn {
+            background: #e5e5ea;
+            color: #1c1c1e;
+            border: none;
+            width: 32px;
+            height: 38px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+        .stepper-btn:active {
+            background: #d1d1d6;
         }
         input[type="text"] {
-            width: 60px;
+            width: 50px;
             padding: 8px;
             font-size: 15px;
             text-align: center;
@@ -285,11 +304,45 @@
             border-radius: 6px;
             border: none;
         }
+        .admin-row {
+            display: flex;
+            gap: 6px;
+        }
+        .admin-row select, .admin-row button {
+            flex: 1;
+        }
+        
+        .admin-stand-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #3a3a3c;
+            padding: 6px 10px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+        .admin-stand-actions {
+            display: flex;
+            gap: 4px;
+        }
+        .admin-btn-sm {
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        .admin-btn-danger {
+            background: #ff3b30;
+        }
 
         /* Print formatting fix */
         @media print {
             body { background: white; color: black; padding: 0; }
-            .control-bar, .dashboard, input[type="checkbox"], input[type="text"], .ns-toggle-btn, .admin-panel {
+            .control-bar, .dashboard, input[type="checkbox"], input[type="text"], .stepper-btn, .ns-toggle-btn, .admin-panel {
                 display: none !important;
             }
             .card {
@@ -330,7 +383,7 @@
         </div>
         <hr style="border-color: #444;">
         <div class="admin-form">
-            <select id="select-level"></select>
+            <select id="select-level" onchange="populateAdminStandsList()"></select>
             <input type="text" id="new-stand-id" placeholder="Stand ID (e.g. #501)">
             <select id="new-stand-size">
                 <option value="50">50 lb</option>
@@ -339,6 +392,11 @@
             </select>
             <input type="number" id="new-stand-total" placeholder="Max Fryer Count (e.g. 4)">
             <button class="action-btn" style="background:#34c759;" onclick="addStand()">Add Stand</button>
+        </div>
+        <hr style="border-color: #444;">
+        <div style="font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #ff9500;">Manage / Rearrange Stands in Selected Level:</div>
+        <div id="admin-stands-container" style="max-height: 200px; overflow-y: auto;">
+            <!-- Populated dynamically -->
         </div>
     </div>
 
@@ -436,12 +494,46 @@
 
         function updateAdminLevelSelect() {
             const select = document.getElementById('select-level');
+            const currentSelected = select.value;
             select.innerHTML = '';
             stadiumData.forEach((sec, idx) => {
                 let opt = document.createElement('option');
                 opt.value = idx;
                 opt.innerText = sec.level;
                 select.appendChild(opt);
+            });
+            if (currentSelected !== "" && currentSelected < stadiumData.length) {
+                select.value = currentSelected;
+            }
+            populateAdminStandsList();
+        }
+
+        function populateAdminStandsList() {
+            const levelIdx = document.getElementById('select-level').value;
+            const container = document.getElementById('admin-stands-container');
+            container.innerHTML = '';
+
+            if (levelIdx === "" || !stadiumData[levelIdx]) return;
+
+            const stands = stadiumData[levelIdx].stands;
+            if (stands.length === 0) {
+                container.innerHTML = '<div style="color: #aaa; font-size: 12px; font-style: italic;">No stands in this level yet.</div>';
+                return;
+            }
+
+            stands.forEach((stand, standIdx) => {
+                const item = document.createElement('div');
+                item.className = 'admin-stand-list-item';
+                item.innerHTML = `
+                    <span><b>${stand.id}</b> (${stand.size}lb, max ${stand.total})</span>
+                    <div class="admin-stand-actions">
+                        <button class="admin-btn-sm" ${standIdx === 0 ? 'disabled style="opacity:0.3"' : ''} onclick="moveStand(${levelIdx}, ${standIdx}, -1)">▲</button>
+                        <button class="admin-btn-sm" ${standIdx === stands.length - 1 ? 'disabled style="opacity:0.3"' : ''} onclick="moveStand(${levelIdx}, ${standIdx}, 1)">▼</button>
+                        <button class="admin-btn-sm" onclick="editStandPrompt(${levelIdx}, ${standIdx})">Edit</button>
+                        <button class="admin-btn-sm admin-btn-danger" onclick="deleteStandFromAdmin(${levelIdx}, '${stand.id}')">✕</button>
+                    </div>
+                `;
+                container.appendChild(item);
             });
         }
 
@@ -467,6 +559,55 @@
             saveConfig();
             document.getElementById('new-stand-id').value = '';
             document.getElementById('new-stand-total').value = '';
+            populateAdminStandsList();
+            render();
+        }
+
+        function deleteStandFromAdmin(levelIdx, standId) {
+            if (!confirm(`Delete stand ${standId}?`)) return;
+            stadiumData[levelIdx].stands = stadiumData[levelIdx].stands.filter(s => s.id !== standId);
+            saveConfig();
+            populateAdminStandsList();
+            render();
+        }
+
+        function moveStand(levelIdx, standIdx, direction) {
+            const stands = stadiumData[levelIdx].stands;
+            const targetIdx = standIdx + direction;
+            if (targetIdx < 0 || targetIdx >= stands.length) return;
+
+            const temp = stands[standIdx];
+            stands[standIdx] = stands[targetIdx];
+            stands[targetIdx] = temp;
+
+            saveConfig();
+            populateAdminStandsList();
+            render();
+        }
+
+        function editStandPrompt(levelIdx, standIdx) {
+            const stand = stadiumData[levelIdx].stands[standIdx];
+            const newId = prompt("Edit Stand ID:", stand.id);
+            if (newId === null) return;
+            const newSizeStr = prompt("Edit Fryer Size (50, 80, or 8):", stand.size);
+            if (newSizeStr === null) return;
+            const newTotalStr = prompt("Edit Max Fryer Count:", stand.total);
+            if (newTotalStr === null) return;
+
+            const size = parseInt(newSizeStr, 10);
+            const total = parseInt(newTotalStr, 10);
+
+            if (!newId.trim() || isNaN(size) || isNaN(total) || total < 1) {
+                alert("Invalid inputs provided. Changes not saved.");
+                return;
+            }
+
+            stand.id = newId.trim();
+            stand.size = size;
+            stand.total = total;
+
+            saveConfig();
+            populateAdminStandsList();
             render();
         }
 
@@ -549,7 +690,9 @@
                         <div class="card-row">
                             <span class="info-text">Filtered count:</span>
                             <div class="input-group">
+                                <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'filter', -1)">−</button>
                                 <input type="text" id="input-filter-${safeId}" value="${isNS ? 'NS' : filterVal}" ${isNS ? 'disabled' : ''} placeholder="Qty" oninput="handleInput('${stand.id}')">
+                                <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'filter', 1)">+</button>
                             </div>
                         </div>
 
@@ -557,7 +700,9 @@
                         <div class="card-row">
                             <span class="info-text">Dumped count:</span>
                             <div class="input-group">
+                                <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'dump', -1)">−</button>
                                 <input type="text" id="input-dump-${safeId}" value="${isNS ? 'NS' : dumpVal}" ${isNS ? 'disabled' : ''} placeholder="Qty" oninput="handleInput('${stand.id}')">
+                                <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'dump', 1)">+</button>
                             </div>
                         </div>
 
@@ -605,6 +750,33 @@
             render();
         }
 
+        function adjustCount(id, field, delta) {
+            const stand = findStand(id);
+            if (!stand) return;
+
+            let dayState = getCurrentDateState();
+            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
+            if (dayState[id].isNS) return; // Ignore if marked NS
+
+            let currentVal = parseNum(dayState[id][field]);
+            let newVal = currentVal + delta;
+            if (newVal < 0) newVal = 0;
+
+            dayState[id][field] = newVal === 0 ? '' : String(newVal);
+
+            saveLogs();
+            
+            // Update input element and validation directly without re-rendering everything
+            const safeId = id.replace(/[^a-zA-Z0-9]/g, '_');
+            const inputEl = document.getElementById(`input-${field}-${safeId}`);
+            if (inputEl) {
+                inputEl.value = dayState[id][field];
+            }
+
+            validateStand(stand);
+            updateTotals();
+        }
+
         function handleInput(id) {
             const stand = findStand(id);
             if (!stand) return;
@@ -629,7 +801,6 @@
             dayState[id].oil = value;
             saveLogs();
             updateTotals();
-            
             render();
         }
 
