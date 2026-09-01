@@ -18,6 +18,8 @@
             text-align: center;
             color: #ba0021;
             margin-bottom: 2px;
+            cursor: pointer;
+            user-select: none;
         }
         .subtitle {
             text-align: center;
@@ -25,7 +27,8 @@
             color: #8e8e93;
             margin-bottom: 12px;
         }
-        /* Date & Action Bar */
+
+        /* Control Bar */
         .control-bar {
             background: #ffffff;
             border-radius: 12px;
@@ -70,7 +73,7 @@
             cursor: pointer;
         }
 
-        /* Summary Dashboard Box */
+        /* Dashboard Box */
         .dashboard {
             background: #ffffff;
             border-radius: 14px;
@@ -153,11 +156,15 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            transition: opacity 0.2s ease;
+            transition: opacity 0.2s ease, background-color 0.2s ease;
         }
         .card.completed {
             background: #f9f9fb;
             opacity: 0.7;
+        }
+        .card.is-ns {
+            background: #fff5f5;
+            border: 1px solid #ffcdd2;
         }
         .card-top {
             display: flex;
@@ -182,6 +189,22 @@
             height: 20px;
             accent-color: #34c759;
             cursor: pointer;
+        }
+
+        /* Dedicated NS Selector Button */
+        .ns-toggle-btn {
+            background: #e5e5ea;
+            color: #8e8e93;
+            border: none;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: 800;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .ns-toggle-btn.active {
+            background: #ff3b30;
+            color: white;
         }
 
         .badge {
@@ -221,7 +244,7 @@
             gap: 6px;
         }
         input[type="text"] {
-            width: 55px;
+            width: 60px;
             padding: 8px;
             font-size: 15px;
             text-align: center;
@@ -233,25 +256,40 @@
             border-color: #ff3b30;
             background-color: #fff2f2;
         }
-        .ns-btn {
-            background: #ff3b30;
+
+        /* Secret Admin Panel */
+        .admin-panel {
+            display: none;
+            background: #2c2c2e;
             color: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .admin-panel.visible {
+            display: block;
+        }
+        .admin-panel h3 {
+            margin-top: 0;
+            font-size: 16px;
+            color: #ff9500;
+        }
+        .admin-form {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .admin-form input, .admin-form select {
+            padding: 8px;
+            border-radius: 6px;
             border: none;
-            padding: 8px 10px;
-            font-weight: bold;
-            border-radius: 8px;
-            font-size: 13px;
-            cursor: pointer;
         }
 
-        /* Print-specific layout styling */
+        /* Print formatting fix */
         @media print {
-            body {
-                background: white;
-                color: black;
-                padding: 0;
-            }
-            .control-bar, .dashboard, .ns-btn, input[type="checkbox"], input[type="text"] {
+            body { background: white; color: black; padding: 0; }
+            .control-bar, .dashboard, input[type="checkbox"], input[type="text"], .ns-toggle-btn, .admin-panel {
                 display: none !important;
             }
             .card {
@@ -262,28 +300,14 @@
                 padding: 8px 12px;
                 opacity: 1 !important;
             }
-            .level-header {
-                font-size: 15px;
-                margin-top: 16px;
-                border-bottom: 1px solid black;
-            }
-            .print-header {
-                display: block !important;
-                text-align: center;
-                margin-bottom: 15px;
-            }
-            .print-only-val {
-                display: inline-block !important;
-                font-weight: bold;
-                font-size: 14px;
-            }
+            .level-header { font-size: 15px; margin-top: 16px; border-bottom: 1px solid black; }
+            .print-header { display: block !important; text-align: center; margin-bottom: 15px; }
+            .print-only-val { display: block !important; font-weight: bold; font-size: 13px; margin-top: 4px; }
+            .card-row { display: none !important; }
+            .error-msg { display: none !important; }
         }
-        .print-header {
-            display: none;
-        }
-        .print-only-val {
-            display: none;
-        }
+        .print-header { display: none; }
+        .print-only-val { display: none; }
     </style>
 </head>
 <body>
@@ -293,10 +317,32 @@
         <div id="print-date-label" style="font-size: 14px; font-weight: bold; margin-top: 4px;"></div>
     </div>
 
-    <h1>Angels Stadium Fryers</h1>
+    <!-- Tap 5 times on title to access Secret Admin Panel -->
+    <h1 onclick="handleTitleClick()">Angels Stadium Fryers</h1>
     <div class="subtitle">Service Tracker</div>
 
-    <!-- Date Bar Selector & Print/Export Button -->
+    <!-- Secret Admin Panel -->
+    <div id="admin-panel" class="admin-panel">
+        <h3>Secret Menu: Edit Levels & Stands</h3>
+        <div class="admin-form">
+            <input type="text" id="new-level-name" placeholder="New Level Name (e.g. Suite Level)">
+            <button class="action-btn" onclick="addLevel()">Add Level</button>
+        </div>
+        <hr style="border-color: #444;">
+        <div class="admin-form">
+            <select id="select-level"></select>
+            <input type="text" id="new-stand-id" placeholder="Stand ID (e.g. #501)">
+            <select id="new-stand-size">
+                <option value="50">50 lb</option>
+                <option value="80">80 lb</option>
+                <option value="8">8 lb</option>
+            </select>
+            <input type="number" id="new-stand-total" placeholder="Max Fryer Count (e.g. 4)">
+            <button class="action-btn" style="background:#34c759;" onclick="addStand()">Add Stand</button>
+        </div>
+    </div>
+
+    <!-- Control Bar -->
     <div class="control-bar">
         <div>
             <label for="shift-date">Shift Date:</label>
@@ -334,7 +380,7 @@
     <div id="app"></div>
 
     <script>
-        const stadiumData = [
+        const defaultData = [
             { level: "View Level", stands: [
                 { id: "#411", size: 50, total: 4 },
                 { id: "#425", size: 50, total: 4 }
@@ -367,9 +413,66 @@
             ]}
         ];
 
-        let allLogs = JSON.parse(localStorage.getItem('angels_fryer_logs_v8')) || {};
+        let stadiumData = JSON.parse(localStorage.getItem('angels_stadium_config_v10')) || defaultData;
+        let allLogs = JSON.parse(localStorage.getItem('angels_fryer_logs_v10')) || {};
         let currentDate = new Date().toLocaleDateString('en-CA');
         document.getElementById('shift-date').value = currentDate;
+
+        /* Secret Admin Menu Tap Counter */
+        let titleClickCount = 0;
+        let titleClickTimer = null;
+        function handleTitleClick() {
+            titleClickCount++;
+            clearTimeout(titleClickTimer);
+            if (titleClickCount >= 5) {
+                const adminPanel = document.getElementById('admin-panel');
+                adminPanel.classList.toggle('visible');
+                updateAdminLevelSelect();
+                titleClickCount = 0;
+            } else {
+                titleClickTimer = setTimeout(() => { titleClickCount = 0; }, 3000);
+            }
+        }
+
+        function updateAdminLevelSelect() {
+            const select = document.getElementById('select-level');
+            select.innerHTML = '';
+            stadiumData.forEach((sec, idx) => {
+                let opt = document.createElement('option');
+                opt.value = idx;
+                opt.innerText = sec.level;
+                select.appendChild(opt);
+            });
+        }
+
+        function addLevel() {
+            const name = document.getElementById('new-level-name').value.trim();
+            if (!name) return;
+            stadiumData.push({ level: name, stands: [] });
+            saveConfig();
+            document.getElementById('new-level-name').value = '';
+            updateAdminLevelSelect();
+            render();
+        }
+
+        function addStand() {
+            const levelIdx = document.getElementById('select-level').value;
+            const id = document.getElementById('new-stand-id').value.trim();
+            const size = parseInt(document.getElementById('new-stand-size').value, 10);
+            const total = parseInt(document.getElementById('new-stand-total').value, 10);
+
+            if (!id || isNaN(total) || total < 1) return;
+
+            stadiumData[levelIdx].stands.push({ id, size, total });
+            saveConfig();
+            document.getElementById('new-stand-id').value = '';
+            document.getElementById('new-stand-total').value = '';
+            render();
+        }
+
+        function saveConfig() {
+            localStorage.setItem('angels_stadium_config_v10', JSON.stringify(stadiumData));
+        }
 
         function getCurrentDateState() {
             if (!allLogs[currentDate]) {
@@ -401,14 +504,15 @@
                 app.appendChild(levelDiv);
 
                 section.stands.forEach(stand => {
-                    const standState = dayState[stand.id] || { filter: '', dump: '', oil: '', done: false };
+                    const standState = dayState[stand.id] || { filter: '', dump: '', oil: '', done: false, isNS: false };
                     const filterVal = standState.filter;
                     const dumpVal = standState.dump;
                     const oilVal = standState.oil;
                     const isDone = standState.done || false;
+                    const isNS = standState.isNS || false;
 
                     const card = document.createElement('div');
-                    card.className = `card ${isDone ? 'completed' : ''}`;
+                    card.className = `card ${isDone ? 'completed' : ''} ${isNS ? 'is-ns' : ''}`;
 
                     let badgeClass = 'badge-other';
                     if (stand.size === 50) badgeClass = 'badge-50';
@@ -416,24 +520,36 @@
 
                     const safeId = stand.id.replace(/[^a-zA-Z0-9]/g, '_');
 
+                    let printDisplay = [];
+                    if (isNS) {
+                        printDisplay.push("STATUS: NOT SERVICED (NS)");
+                    } else {
+                        printDisplay.push(`Filtered: ${filterVal || '0'}`);
+                        printDisplay.push(`Dumped: ${dumpVal || '0'}`);
+                    }
+                    if (oilVal) printDisplay.push(`Oil: ${oilVal} gal`);
+                    const printStr = printDisplay.join(" | ");
+
                     card.innerHTML = `
                         <div class="card-top">
                             <div class="stand-left">
                                 <input type="checkbox" id="check-${safeId}" ${isDone ? 'checked' : ''} onchange="toggleDone('${stand.id}', this.checked)">
+                                <button class="ns-toggle-btn ${isNS ? 'active' : ''}" onclick="toggleNS('${stand.id}')">NS</button>
                                 <span class="stand-title">${stand.id}</span>
                             </div>
                             <div>
-                                <span class="print-only-val">Filtered: ${filterVal || '0'} | Dumped: ${dumpVal || '0'} | Oil: ${oilVal || '0'}gal</span>
                                 <span class="badge ${badgeClass}">${stand.size} lb (${stand.total} max)</span>
                             </div>
                         </div>
+
+                        <!-- Print Summary -->
+                        <div class="print-only-val">${printStr}</div>
                         
                         <!-- Filter Row -->
                         <div class="card-row">
                             <span class="info-text">Filtered count:</span>
                             <div class="input-group">
-                                <input type="text" id="input-filter-${safeId}" value="${filterVal}" placeholder="Qty" oninput="handleInput('${stand.id}', this.value)">
-                                <button class="ns-btn" onclick="setNS('${stand.id}', 'filter')">NS</button>
+                                <input type="text" id="input-filter-${safeId}" value="${isNS ? 'NS' : filterVal}" ${isNS ? 'disabled' : ''} placeholder="Qty" oninput="handleInput('${stand.id}')">
                             </div>
                         </div>
 
@@ -441,12 +557,11 @@
                         <div class="card-row">
                             <span class="info-text">Dumped count:</span>
                             <div class="input-group">
-                                <input type="text" id="input-dump-${safeId}" value="${dumpVal}" placeholder="Qty" oninput="handleInput('${stand.id}', this.value)">
-                                <button class="ns-btn" onclick="setNS('${stand.id}', 'dump')">NS</button>
+                                <input type="text" id="input-dump-${safeId}" value="${isNS ? 'NS' : dumpVal}" ${isNS ? 'disabled' : ''} placeholder="Qty" oninput="handleInput('${stand.id}')">
                             </div>
                         </div>
 
-                        <!-- Combined Error Message Row -->
+                        <!-- Error Message Row -->
                         <div class="error-msg" id="err-${safeId}">⚠️ Filter + Dump cannot exceed max total (${stand.total})!</div>
 
                         <!-- Oil Row -->
@@ -468,20 +583,29 @@
 
         function toggleDone(id, isChecked) {
             let dayState = getCurrentDateState();
-            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false };
+            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
             dayState[id].done = isChecked;
             saveLogs();
-            
-            const safeId = id.replace(/[^a-zA-Z0-9]/g, '_');
-            const cardEl = document.getElementById(`check-${safeId}`).closest('.card');
-            if (isChecked) {
-                cardEl.classList.add('completed');
-            } else {
-                cardEl.classList.remove('completed');
-            }
+            render();
         }
 
-        function handleInput(id, value) {
+        function toggleNS(id) {
+            let dayState = getCurrentDateState();
+            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
+            dayState[id].isNS = !dayState[id].isNS;
+            
+            if (dayState[id].isNS) {
+                dayState[id].filter = 'NS';
+                dayState[id].dump = 'NS';
+            } else {
+                dayState[id].filter = '';
+                dayState[id].dump = '';
+            }
+            saveLogs();
+            render();
+        }
+
+        function handleInput(id) {
             const stand = findStand(id);
             if (!stand) return;
 
@@ -490,7 +614,7 @@
             const dumpEl = document.getElementById(`input-dump-${safeId}`);
 
             let dayState = getCurrentDateState();
-            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false };
+            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
             dayState[id].filter = filterEl.value;
             dayState[id].dump = dumpEl.value;
 
@@ -499,33 +623,18 @@
             updateTotals();
         }
 
-        function setNS(id, actionType) {
-            const stand = findStand(id);
-            if (!stand) return;
-
-            let dayState = getCurrentDateState();
-            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false };
-            dayState[id][actionType] = 'NS';
-            saveLogs();
-            
-            const safeId = id.replace(/[^a-zA-Z0-9]/g, '_');
-            const inputEl = document.getElementById(`input-${actionType}-${safeId}`);
-            if(inputEl) inputEl.value = 'NS';
-
-            validateStand(stand);
-            updateTotals();
-        }
-
         function handleOil(id, value) {
             let dayState = getCurrentDateState();
-            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false };
+            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
             dayState[id].oil = value;
             saveLogs();
             updateTotals();
+            
+            render();
         }
 
         function saveLogs() {
-            localStorage.setItem('angels_fryer_logs_v8', JSON.stringify(allLogs));
+            localStorage.setItem('angels_fryer_logs_v10', JSON.stringify(allLogs));
         }
 
         function findStand(id) {
@@ -537,13 +646,12 @@
             return null;
         }
 
-        function parseNum(val, maxTotal) {
-            if (val === undefined || val === '') return 0;
+        function parseNum(val) {
+            if (val === undefined || val === null || val === '') return 0;
             let str = String(val).toUpperCase();
             if (str === 'NS') return 0;
             let parsed = parseInt(val, 10);
-            if (isNaN(parsed) || parsed < 0) return 0;
-            return parsed;
+            return isNaN(parsed) || parsed < 0 ? 0 : parsed;
         }
 
         function validateStand(stand) {
@@ -554,13 +662,10 @@
             
             if (!filterEl || !dumpEl || !errEl) return;
 
-            let fRaw = String(filterEl.value).trim().toUpperCase();
-            let dRaw = String(dumpEl.value).trim().toUpperCase();
-            
-            let fValidNum = (fRaw === '' || fRaw === 'NS') ? 0 : parseInt(filterEl.value, 10);
-            let dValidNum = (dRaw === '' || dRaw === 'NS') ? 0 : parseInt(dumpEl.value, 10);
+            let fNum = parseNum(filterEl.value);
+            let dNum = parseNum(dumpEl.value);
 
-            let isOverLimit = (fValidNum + dValidNum) > stand.total;
+            let isOverLimit = (fNum + dNum) > stand.total;
 
             if (isOverLimit) {
                 filterEl.classList.add('error-input');
@@ -584,36 +689,26 @@
                     let standObj = dayState[stand.id];
                     if (!standObj) return;
 
-                    let fVal = standObj.filter;
-                    let dVal = standObj.dump;
-                    let oVal = standObj.oil;
+                    if (!standObj.isNS) {
+                        let fNum = parseNum(standObj.filter);
+                        let dNum = parseNum(standObj.dump);
 
-                    let fNum = parseNum(fVal, stand.total);
-                    let dNum = parseNum(dVal, stand.total);
-
-                    let fRaw = String(fVal || '').trim().toUpperCase();
-                    let dRaw = String(dVal || '').trim().toUpperCase();
-                    let fCheck = (fRaw === '' || fRaw === 'NS') ? 0 : parseInt(fVal, 10);
-                    let dCheck = (dRaw === '' || dRaw === 'NS') ? 0 : parseInt(dVal, 10);
-
-                    if ((fCheck + dCheck) > stand.total) {
-                        fNum = 0;
-                        dNum = 0;
-                    }
-
-                    if (oVal !== undefined && oVal !== '') {
-                        let parsedOil = parseFloat(oVal);
-                        if (!isNaN(parsedOil)) {
-                            totalOil += parsedOil;
+                        if ((fNum + dNum) <= stand.total) {
+                            if (stand.size === 50) {
+                                f50 += fNum;
+                                d50 += dNum;
+                            } else if (stand.size === 80) {
+                                f80 += fNum;
+                                d80 += dNum;
+                            }
                         }
                     }
 
-                    if (stand.size === 50) {
-                        f50 += fNum;
-                        d50 += dNum;
-                    } else if (stand.size === 80) {
-                        f80 += fNum;
-                        d80 += dNum;
+                    if (standObj.oil !== undefined && standObj.oil !== '') {
+                        let parsedOil = parseFloat(standObj.oil);
+                        if (!isNaN(parsedOil)) {
+                            totalOil += parsedOil;
+                        }
                     }
                 });
             });
@@ -629,4 +724,3 @@
     </script>
 </body>
 </html>
-
