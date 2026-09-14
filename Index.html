@@ -2,903 +2,1284 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Angels Stadium Fryer Tracker</title>
+    <!-- Mobile Viewport with iPhone Notch / Island Support -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Angels Stadium Fryers</title>
+
+    <!-- iOS Standalone Web App Capabilities -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Filta Tracker">
+
+    <!-- Home Screen Icon (Replace with your icon filename or URL) -->
+    <link rel="apple-touch-icon" href="filtaioslogo.png">
+
+    <!-- Android / Chrome Web App Support -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#121212">
+
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f2f2f7;
-            color: #1c1c1e;
-            margin: 0;
-            padding: 16px;
-            padding-bottom: 50px;
+        :root {
+            --app-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --bg-body: #121212;
+            --bg-control-bar: #1e1e1e;
+            --bg-dashboard: #1e1e1e;
+            --bg-card: #1e1e1e;
+            --bg-card-completed: #152419;
+            --bg-card-ns: #1a1a1a;
+            --bg-subbox: #262626;
+            --bg-admin: #222222;
+            --text-main: #e0e0e0;
+            --text-muted: #8e8e93;
+            --text-heading: #ffffff;
+			  --text-z: #7cbb4e;
+			  --text-x: #0479cb;
+			  --text-y: ##1ba829;
+            --border-color: #7cbb4e;
+            --border-completed: #34c759;
+            --border-ns: #ba0021;
+            --accent-blue: #007aff;
+            --accent-green: #34c759;
+            --accent-gold: #ff9500;
+            --accent-red: #ff3b30;
+            --box-radius-md: 8px;
+            --box-radius-sm: 5px;
         }
-        h1 {
-            font-size: 22px;
-            text-align: center;
-            color: #ba0021;
-            margin-bottom: 2px;
+
+        /* Safe area aware base layout */
+        body {
+            font-family: var(--app-font-family);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding-top: max(10px, env(safe-area-inset-top));
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+            padding-left: max(10px, env(safe-area-inset-left));
+            padding-right: max(10px, env(safe-area-inset-right));
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Compact Header Container */
+        .header-container {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 8px;
             cursor: pointer;
             user-select: none;
-        }
-        .subtitle {
+            margin: 4px 0 10px 0;
             text-align: center;
-            font-size: 13px;
-            color: #8e8e93;
-            margin-bottom: 12px;
         }
+
+        h1 {
+            font-size: 21px;
+            margin: 0;
+            color: var(--text-x);
+            font-weight: 800;
+            letter-spacing: -0.3px;
+        }
+
+        .sub-header-tag {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-z);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .print-header { display: none; }
 
         /* Control Bar */
         .control-bar {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 10px 14px;
-            margin-bottom: 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-            border: 1px solid #e5e5ea;
-            gap: 10px;
+            background: var(--bg-control-bar);
+            padding: 8px 12px;
+            border-radius: var(--box-radius-md);
+            border: 1px solid var(--border-color);
+            margin-bottom: 10px;
             flex-wrap: wrap;
-        }
-        .control-bar div {
-            display: flex;
-            align-items: center;
             gap: 8px;
         }
-        .control-bar label {
-            font-size: 13px;
-            font-weight: 700;
-            color: #3a3a3c;
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
         }
+
+        .control-bar select, 
         .control-bar input[type="date"] {
-            padding: 6px 10px;
-            font-size: 14px;
-            border: 1px solid #c7c7cc;
-            border-radius: 8px;
+            background: #2a2a2a;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 5px 8px;
+            border-radius: var(--box-radius-sm);
+            font-size: 13px;
+            font-weight: 600;
             outline: none;
-            background: #f8f8f6;
-            color: #1c1c1e;
-            font-weight: 600;
         }
+
         .action-btn {
-            background: #007aff;
+            background: var(--accent-blue);
             color: white;
             border: none;
-            padding: 7px 12px;
-            font-weight: 600;
-            border-radius: 8px;
-            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: var(--box-radius-sm);
+            font-weight: 700;
             cursor: pointer;
-        }
-
-        /* Dashboard Box */
-        .dashboard {
-            background: #ffffff;
-            border-radius: 14px;
-            padding: 14px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-            border: 1px solid #e5e5ea;
-            position: sticky;
-            top: 10px;
-            z-index: 100;
-        }
-        .dashboard-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: #8e8e93;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-        .stat-category {
-            background: #f8f8f6;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid #e5e5ea;
-        }
-        .stat-cat-title {
             font-size: 12px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            text-align: center;
-        }
-        .title-50 { color: #b24700; }
-        .title-80 { color: #004080; }
-
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: #3a3a3c;
-            margin-bottom: 4px;
-        }
-        .stat-row span:last-child {
-            font-weight: 700;
-        }
-        .oil-total-box {
-            grid-column: span 2;
-            background: #eef5ff;
-            padding: 8px 12px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
-            font-weight: 700;
-            color: #004080;
-            border: 1px solid #d0e1fd;
-            margin-top: 4px;
-        }
-
-        .level-header {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 24px 0 8px 4px;
-            color: #2c2c2e;
-            border-bottom: 2px solid #d1d1d6;
-            padding-bottom: 4px;
-        }
-        .card {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            transition: opacity 0.2s ease, background-color 0.2s ease;
-        }
-        .card.completed {
-            background: #f9f9fb;
-            opacity: 0.7;
-        }
-        .card.is-ns {
-            background: #fff5f5;
-            border: 1px solid #ffcdd2;
-        }
-        .card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .stand-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .stand-title {
-            font-weight: 600;
-            font-size: 16px;
-        }
-        .card.completed .stand-title {
-            text-decoration: line-through;
-            color: #8e8e93;
-        }
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            accent-color: #34c759;
-            cursor: pointer;
-        }
-
-        /* Dedicated NS Selector Button */
-        .ns-toggle-btn {
-            background: #e5e5ea;
-            color: #8e8e93;
-            border: none;
-            padding: 4px 8px;
-            font-size: 11px;
-            font-weight: 800;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        .ns-toggle-btn.active {
-            background: #ff3b30;
-            color: white;
-        }
-
-        .badge {
-            background: #e5e5ea;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        .badge-50 { background: #ffe5d0; color: #b24700; }
-        .badge-80 { background: #d0e1fd; color: #004080; }
-        .badge-other { background: #e5e5ea; color: #3a3a3c; }
-        
-        .card-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid #f2f2f7;
-            padding-top: 8px;
-        }
-        .info-text {
-            font-size: 13px;
-            color: #3a3a3c;
-            font-weight: 500;
-        }
-        .error-msg {
-            font-size: 11px;
-            color: #ff3b30;
-            font-weight: 600;
-            display: none;
-        }
-        .error-msg.visible {
-            display: block;
-        }
-        .input-group {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 4px;
         }
-        .stepper-btn {
-            background: #e5e5ea;
-            color: #1c1c1e;
-            border: none;
-            width: 32px;
-            height: 38px;
-            font-size: 18px;
-            font-weight: 700;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            user-select: none;
-        }
-        .stepper-btn:active {
-            background: #d1d1d6;
-        }
-        input[type="text"] {
-            width: 50px;
-            padding: 8px;
-            font-size: 15px;
-            text-align: center;
-            border: 1px solid #c7c7cc;
-            border-radius: 8px;
-            outline: none;
-        }
-        input.error-input {
-            border-color: #ff3b30;
-            background-color: #fff2f2;
-        }
+        .action-btn:active { opacity: 0.75; }
+        .cloud-btn { background: var(--accent-green); }
 
-        /* Secret Admin Panel */
+        /* Secret Menu Admin Panel */
         .admin-panel {
             display: none;
-            background: #2c2c2e;
-            color: white;
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 16px;
+            background: var(--bg-admin);
+            border: 1px solid var(--accent-gold);
+            padding: 12px;
+            border-radius: var(--box-radius-md);
+            margin-bottom: 14px;
         }
-        .admin-panel.visible {
-            display: block;
-        }
+        .admin-panel.visible { display: block; }
         .admin-panel h3 {
-            margin-top: 0;
-            font-size: 16px;
-            color: #ff9500;
+            margin: 0 0 8px 0;
+            color: var(--accent-gold);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .admin-form {
             display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-        .admin-form input, .admin-form select {
-            padding: 8px;
-            border-radius: 6px;
-            border: none;
-        }
-        .admin-row {
-            display: flex;
             gap: 6px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
         }
-        .admin-row select, .admin-row button {
+        .admin-form input, 
+        .admin-form select {
+            background: #181818;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 5px 8px;
+            border-radius: var(--box-radius-sm);
+            font-size: 12px;
             flex: 1;
+            min-width: 100px;
         }
-        
         .admin-stand-list-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #3a3a3c;
-            padding: 6px 10px;
-            border-radius: 6px;
-            margin-bottom: 6px;
-            font-size: 13px;
+            background: #1c1c1e;
+            padding: 5px 8px;
+            border-radius: var(--box-radius-sm);
+            margin-bottom: 4px;
+            font-size: 12px;
+            border: 1px solid #333;
         }
         .admin-stand-actions {
             display: flex;
             gap: 4px;
         }
         .admin-btn-sm {
-            background: #007aff;
-            color: white;
-            border: none;
-            padding: 3px 6px;
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 2px 6px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .admin-btn-danger {
+            background: #990000;
+            border-color: #ff3b30;
+        }
+
+        /* Summary Dashboard */
+        .dashboard {
+            background: var(--bg-dashboard);
+            border: 1px solid var(--border-color);
+            border-radius: var(--box-radius-md);
+            padding: 8px 10px;
+            margin-bottom: 12px;
+        }
+        .dashboard-title {
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            text-align: center;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.1fr;
+            gap: 6px;
+        }
+        .stat-category {
+            background: var(--bg-subbox);
+            padding: 6px 8px;
+            border-radius: var(--box-radius-sm);
+            text-align: center;
+        }
+        .stat-cat-title {
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        .title-50 { color: var(--accent-gold); }
+        .title-80 { color: #5ac8fa; }
+        .stat-row {
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1px;
+            font-weight: 600;
+        }
+        .oil-total-box {
+            background: var(--bg-subbox);
+            padding: 6px 8px;
+            border-radius: var(--box-radius-sm);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        /* Level Section Headers */
+        .level-header {
+            font-size: 14px;
+            font-weight: 800;
+            margin: 14px 0 6px 0;
+            color: var(--accent-gold);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* =======================================================
+           COMPRESSED CARD LAYOUT (Full fonts, compact spacing)
+           ======================================================= */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--box-radius-md);
+            /* Tightened padding: saves ~12px vertical space per card */
+            padding: 6px 10px;
+            /* Tightened spacing between cards */
+            margin-bottom: 6px;
+            transition: border-color 0.15s, background-color 0.15s;
+        }
+        .card.completed {
+            border-left: 5px solid var(--border-completed);
+            background: var(--bg-card-completed);
+        }
+        .card.is-ns {
+            border-left: 5px solid var(--border-ns);
+            background: var(--bg-card-ns);
+            opacity: 0.65;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+        .stand-left {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        /* Card Checkbox */
+        .card-checkbox {
+            width: 17px;
+            height: 17px;
+            accent-color: var(--accent-green);
+            cursor: pointer;
+            margin: 0;
+        }
+
+        /* Stand Title: 100% original bold readable font */
+        .stand-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.2px;
+        }
+
+        /* Badges */
+        .badge {
+            font-size: 11px;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            display: inline-block;
+        }
+        .badge-50 {
+            background: rgba(255, 149, 0, 0.15);
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+        }
+        .badge-80 {
+            background: rgba(90, 200, 250, 0.15);
+            color: #5ac8fa;
+            border: 1px solid #5ac8fa;
+        }
+        .badge-other {
+            background: #2a2a2a;
+            color: #aaa;
+            border: 1px solid #444;
+        }
+
+        /* Compact Rows */
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /* Reduced vertical spacing from 8px down to 3px */
+            margin-top: 3px;
+        }
+
+        /* Labels: Crisp 12-13px font */
+        .info-text {
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        /* Compact Stepper Buttons */
+        .stepper-btn {
+            background: #2e2e30;
+            color: #ffffff;
+            border: 1px solid #1ba829;
+            width: 28px;
+            height: 26px;
+            border-radius: var(--box-radius-sm);
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            padding: 0;
+        }
+        .stepper-btn:active {
+            background: #444;
+        }
+
+        /* Numeric Inputs: tight vertical padding, full 13px font */
+        .card-row input[type="text"] {
+            width: 44px;
+            height: 26px;
+            box-sizing: border-box;
+            background: #2a2a2a;
+            color: #ffffff;
+            border: 1px solid #1ba829;
+            text-align: center;
+            padding: 0 3px;
+            border-radius: var(--box-radius-sm);
+            font-size: 13px;
+            font-weight: 700;
+            outline: none;
+        }
+        .card-row input[type="text"]:focus {
+            border-color: var(--text-y);
+        }
+
+        /* Compact NS Toggle Button */
+        .ns-toggle-btn {
+            background: #2a2a2a;
+            color: #888;
+            border: 1px #1ba829;
+            padding: 2px 6px;
             border-radius: 4px;
             font-size: 11px;
             cursor: pointer;
+            font-weight: 800;
+            letter-spacing: 0.4px;
         }
-        .admin-btn-danger {
-            background: #ff3b30;
+        .ns-toggle-btn.active {
+            background: var(--accent-red);
+            color: white;
+            border-color: var(--accent-red);
         }
 
-        /* Print formatting fix */
+        /* Stand Note / Comments Input */
+        .comment-input {
+            width: 100%;
+            height: 24px;
+            box-sizing: border-box;
+            background: #222222;
+            color: #fff;
+            border: 1px #1ba829;
+            border-radius: 4px;
+            font-size: 11px;
+            padding: 2px 6px;
+            outline: none;
+        }
+        .comment-input:focus {
+            border-color: var(--accent-gold);
+        }
+
+        .error-msg {
+            color: var(--accent-red);
+            font-size: 10px;
+            font-weight: 700;
+            margin-top: 2px;
+            display: none;
+        }
+        .error-msg.visible { display: block; }
+        .error-input {
+            border-color: var(--accent-red) !important;
+            background: #2c1616 !important;
+        }
+
+        .print-only-val { display: none; }
+
+        /* Modal Confirmation */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(2px);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: #1e1e1e;
+            border: 1px solid #444;
+            border-radius: 10px;
+            padding: 18px 20px;
+            max-width: 310px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+        }
+        .modal-box p {
+            margin: 0 0 16px 0;
+            font-size: 13px;
+            line-height: 1.4;
+            color: #eee;
+            font-weight: 600;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .modal-btn {
+            padding: 7px 16px;
+            border-radius: 4px;
+            border: none;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .modal-btn-cancel { background: #383838; color: #fff; }
+        .modal-btn-confirm { background: var(--accent-green); color: #fff; }
+
+        /* Print Layout Rules */
         @media print {
-            body { background: white; color: black; padding: 0; }
-            .control-bar, .dashboard, input[type="checkbox"], input[type="text"], .stepper-btn, .ns-toggle-btn, .admin-panel {
+            body {
+                background: white !important;
+                color: black !important;
+                padding: 0 !important;
+            }
+            .control-bar, .admin-panel, .dashboard, .action-btn, 
+            .stepper-btn, .ns-toggle-btn, .card-checkbox, .modal-overlay,
+            .card-row, .header-container {
                 display: none !important;
             }
-            .card {
-                box-shadow: none;
-                border: 1px solid #ccc;
-                break-inside: avoid;
-                margin-bottom: 8px;
-                padding: 8px 12px;
-                opacity: 1 !important;
+            .print-header {
+                display: block;
+                margin-bottom: 10px;
+                border-bottom: 2px solid #000;
+                padding-bottom: 6px;
             }
-            .level-header { font-size: 15px; margin-top: 16px; border-bottom: 1px solid black; }
-            .print-header { display: block !important; text-align: center; margin-bottom: 15px; }
-            .print-only-val { display: block !important; font-weight: bold; font-size: 13px; margin-top: 4px; }
-            .card-row { display: none !important; }
-            .error-msg { display: none !important; }
+            .print-header h1 {
+                color: black !important;
+                font-size: 18px;
+            }
+            .card {
+                border: 1px solid #999 !important;
+                background: white !important;
+                break-inside: avoid;
+                margin-bottom: 5px !important;
+                padding: 6px 8px !important;
+            }
+            .stand-title, .level-header {
+                color: black !important;
+            }
+            .level-header {
+                font-size: 13px !important;
+                margin-top: 10px !important;
+                border-bottom: 1px solid #999;
+            }
+            .badge {
+                border: 1px solid #000 !important;
+                color: black !important;
+                background: none !important;
+            }
+            .print-only-val {
+                display: block !important;
+                font-size: 11px;
+                font-weight: 700;
+                margin-top: 3px;
+                color: #000;
+            }
         }
-        .print-header { display: none; }
-        .print-only-val { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="print-header">
-        <h1>Angels Stadium Fryer Service Report</h1>
-        <div id="print-date-label" style="font-size: 14px; font-weight: bold; margin-top: 4px;"></div>
+<div class="print-header">
+    <h1>Angel's Stadium TxT</h1>
+    <div id="print-date-label" style="font-size: 12px; font-weight: bold; margin-top: 2px; color: #333;"></div>
+</div>
+
+<!-- Header (Tap 5 times to reveal Secret Menu) -->
+<div class="header-container" onclick="handleTitleClick()">
+    <h1>Angel's Stadium</h1>
+    <span class="sub-header-tag">Service Log</span>
+</div>
+
+<!-- Secret Admin Panel -->
+<div id="admin-panel" class="admin-panel">
+    <h3>Secret Menu: Edit Levels & Stands</h3>
+    <div class="admin-form">
+        <input type="text" id="new-level-name" placeholder="New Level Name">
+        <button class="action-btn" onclick="addLevel()">Add Level</button>
     </div>
+    <hr style="border-color: #1ba829; margin: 8px 0;">
+    <div class="admin-form">
+        <select id="select-level" onchange="populateAdminStandsList()"></select>
+        <input type="text" id="new-stand-id" placeholder="Stand ID (e.g. #501)">
+        <select id="new-stand-size">
+            <option value="50">50 lb</option>
+            <option value="80">80 lb</option>
+            <option value="8">8 lb</option>
+        </select>
+        <input type="number" id="new-stand-total" placeholder="Max Count (e.g. 4)">
+        <button class="action-btn" style="background: var(--accent-green);" onclick="addStand()">Add Stand</button>
+    </div>
+    <div style="font-size: 11px; font-weight: 700; margin: 6px 0 4px 0; color: var(--accent-gold);">Manage / Reorder Stands:</div>
+    <div id="admin-stands-container" style="max-height: 160px; overflow-y: auto;"></div>
 
-    <!-- Tap 5 times on title to access Secret Admin Panel -->
-    <h1 onclick="handleTitleClick()">Angels Stadium Fryers</h1>
-    <div class="subtitle">Service Tracker</div>
+    <!-- Secret Menu: Technician Editor -->
+    <hr style="border-color: #1ba829; margin: 12px 0 8px 0;">
+    <h3>Secret Menu: Edit Technicians</h3>
+    <div class="admin-form">
+        <input type="text" id="new-tech-name" placeholder="Technician Name">
+        <button class="action-btn" onclick="addTech()">Add Tech</button>
+    </div>
+    <div style="font-size: 11px; font-weight: 700; margin: 6px 0 4px 0; color: var(--accent-gold);">Manage Technicians:</div>
+    <div id="admin-tech-container" style="max-height: 130px; overflow-y: auto;"></div>
+</div>
 
-    <!-- Secret Admin Panel -->
-    <div id="admin-panel" class="admin-panel">
-        <h3>Secret Menu: Edit Levels & Stands</h3>
-        <div class="admin-form">
-            <input type="text" id="new-level-name" placeholder="New Level Name (e.g. Suite Level)">
-            <button class="action-btn" onclick="addLevel()">Add Level</button>
+<!-- Control Bar -->
+<div class="control-bar">
+    <div class="control-group">
+        <label for="technician-select">Tech:</label>
+        <select id="technician-select" onchange="changeTech(this.value)"></select>
+    </div>
+    <div class="control-group">
+        <label for="shift-date">Shift:</label>
+        <input type="date" id="shift-date" onchange="changeDate(this.value)">
+    </div>
+    <div style="display: flex; gap: 6px;">
+        <button class="action-btn" onclick="printReport()">🖨️ Print</button>
+        <button class="action-btn cloud-btn" id="cloud-submit-btn" onclick="openConfirmModal()">☁️ Submit</button>
+    </div>
+</div>
+
+<!-- Summary Dashboard -->
+<div class="dashboard">
+    <div class="dashboard-title">Service Totals</div>
+    <div class="stats-grid">
+        <div class="stat-category">
+            <div class="stat-cat-title title-50">50 lb Fryers</div>
+            <div class="stat-row"><span>Filter:</span> <span id="f50-val">0</span></div>
+            <div class="stat-row"><span>Dump:</span> <span id="d50-val">0</span></div>
         </div>
-        <hr style="border-color: #444;">
-        <div class="admin-form">
-            <select id="select-level" onchange="populateAdminStandsList()"></select>
-            <input type="text" id="new-stand-id" placeholder="Stand ID (e.g. #501)">
-            <select id="new-stand-size">
-                <option value="50">50 lb</option>
-                <option value="80">80 lb</option>
-                <option value="8">8 lb</option>
-            </select>
-            <input type="number" id="new-stand-total" placeholder="Max Fryer Count (e.g. 4)">
-            <button class="action-btn" style="background:#34c759;" onclick="addStand()">Add Stand</button>
+        <div class="stat-category">
+            <div class="stat-cat-title title-80">80 lb Fryers</div>
+            <div class="stat-row"><span>Filter:</span> <span id="f80-val">0</span></div>
+            <div class="stat-row"><span>Dump:</span> <span id="d80-val">0</span></div>
         </div>
-        <hr style="border-color: #444;">
-        <div style="font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #ff9500;">Manage / Rearrange Stands in Selected Level:</div>
-        <div id="admin-stands-container" style="max-height: 200px; overflow-y: auto;">
-            <!-- Populated dynamically -->
+        <div class="oil-total-box">
+            <span>Total Oil:</span>
+            <span style="font-size: 14px; font-weight: 800; color: var(--accent-gold);"><span id="total-oil-val">0</span> gal</span>
         </div>
     </div>
+</div>
 
-    <!-- Control Bar -->
-    <div class="control-bar">
-        <div>
-            <label for="shift-date">Shift Date:</label>
-            <input type="date" id="shift-date" onchange="changeDate(this.value)">
-        </div>
-        <div>
-            <button class="action-btn" onclick="printReport()">🖨️ Print / Save PDF</button>
-        </div>
-    </div>
+<!-- App Stand Cards -->
+<div id="app"></div>
 
-    <!-- Summary Dashboard Box -->
-    <div class="dashboard">
-        <div class="dashboard-title">Service Totals Dashboard</div>
-        <div class="stats-grid">
-            <!-- 50 lb Stats -->
-            <div class="stat-category">
-                <div class="stat-cat-title title-50">50 lb Fryers</div>
-                <div class="stat-row"><span>Filter:</span> <span id="f50-val">0</span></div>
-                <div class="stat-row"><span>Dump:</span> <span id="d50-val">0</span></div>
-            </div>
-            <!-- 80 lb Stats -->
-            <div class="stat-category">
-                <div class="stat-cat-title title-80">80 lb Fryers</div>
-                <div class="stat-row"><span>Filter:</span> <span id="f80-val">0</span></div>
-                <div class="stat-row"><span>Dump:</span> <span id="d80-val">0</span></div>
-            </div>
-            <!-- Total Oil Used -->
-            <div class="oil-total-box">
-                <span>Total Oil Used:</span>
-                <span><span id="total-oil-val">0</span> gal</span>
-            </div>
+<!-- Confirmation Dialog Modal -->
+<div id="confirm-modal" class="modal-overlay">
+    <div class="modal-box">
+        <p>Are you sure your logs are correct and accurate?</p>
+        <div class="modal-actions">
+            <button class="modal-btn modal-btn-cancel" onclick="closeConfirmModal()">Go Back</button>
+            <button class="modal-btn modal-btn-confirm" onclick="executeSubmitToCloud()">SUBMIT</button>
         </div>
     </div>
+</div>
 
-    <div id="app"></div>
+<script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwOZFVD1iITEH34zV5g8PGmb4osXYWAM7fPUh-tmeDyMaBe3_YLJkJ4Tdzeb1CpzB2k/exec";
+    const LOG_DELAY_MS = 60;
 
-    <script>
-        const defaultData = [
-            { level: "View Level", stands: [
-                { id: "#411", size: 50, total: 4 },
-                { id: "#425", size: 50, total: 4 }
-            ]},
-            { level: "Club Level", stands: [
-                { id: "#344", size: 50, total: 2 },
-                { id: "#334", size: 50, total: 3 },
-                { id: "1st Base", size: 80, total: 4 },
-                { id: "#317", size: 50, total: 3 },
-                { id: "3rd Base", size: 80, total: 4 },
-                { id: "Brewery X", size: 50, total: 1 },
-                { id: "Brewery X (Alt)", size: 80, total: 2 }
-            ]},
-            { level: "Terrace Level", stands: [
-                { id: "#226", size: 80, total: 3 },
-                { id: "#223", size: 50, total: 6 },
-                { id: "#207", size: 50, total: 4 },
-                { id: "#207 (80lb)", size: 80, total: 2 },
-                { id: "#260", size: 80, total: 3 },
-                { id: "#255", size: 50, total: 4 }
-            ]},
-            { level: "Field Level", stands: [
-                { id: "#130", size: 50, total: 6 },
-                { id: "#109", size: 50, total: 1 },
-                { id: "#106", size: 80, total: 4 },
-                { id: "Main Kitchen", size: 80, total: 3 },
-                { id: "Commissary", size: 80, total: 1 },
-                { id: "DC Restaurant", size: 80, total: 4 },
-                { id: "DC Inseat", size: 8, total: 3 }
-            ]}
-        ];
+    const defaultData = [
+        { level: "View Level", stands: [
+            { id: "#411", size: 50, total: 4 },
+            { id: "#425", size: 50, total: 4 }
+        ]},
+        { level: "Club Level", stands: [
+            { id: "#344", size: 50, total: 2 },
+            { id: "#334", size: 50, total: 3 },
+            { id: "1st Base", size: 80, total: 4 },
+            { id: "#317", size: 50, total: 3 },
+            { id: "3rd Base", size: 80, total: 4 },
+            { id: "Brewery X", size: 50, total: 1 },
+            { id: "Brewery X (Alt)", size: 80, total: 2 }
+        ]},
+        { level: "Terrace Level", stands: [
+            { id: "Pacifico 207 (Front)", size: 50, total: 4 },
+            { id: "#226", size: 80, total: 3 },
+            { id: "#223", size: 50, total: 6 },
+            { id: "#207 (80lb)", size: 80, total: 2 },
+            { id: "#260", size: 80, total: 3 },
+            { id: "#255", size: 50, total: 4 }
+        ]},
+        { level: "Field Level", stands: [
+            { id: "#130", size: 50, total: 6 },
+            { id: "#109", size: 50, total: 1 },
+            { id: "#106", size: 80, total: 4 },
+            { id: "Main Kitchen", size: 80, total: 3 },
+            { id: "Commissary", size: 80, total: 1 },
+            { id: "DC Restaurant", size: 80, total: 4 },
+            { id: "DC Inseat", size: 8, total: 3 }
+        ]}
+    ];
 
-        let stadiumData = JSON.parse(localStorage.getItem('angels_stadium_config_v10')) || defaultData;
-        let allLogs = JSON.parse(localStorage.getItem('angels_fryer_logs_v10')) || {};
-        let currentDate = new Date().toLocaleDateString('en-CA');
-        document.getElementById('shift-date').value = currentDate;
+    let stadiumData = JSON.parse(localStorage.getItem('angels_stadium_config_v10')) || defaultData;
+    let allLogs = JSON.parse(localStorage.getItem('angels_fryer_logs_v10')) || {};
+    let defaultTechs = ["Carlos Nuno", "Angel", "Manuel", "Moses"];
+    let technicians = JSON.parse(localStorage.getItem('angels_techs_v10')) || defaultTechs;
+    let currentTech = technicians[0] || "Carlos Nuno";
 
-        /* Secret Admin Menu Tap Counter */
-        let titleClickCount = 0;
-        let titleClickTimer = null;
-        function handleTitleClick() {
-            titleClickCount++;
-            clearTimeout(titleClickTimer);
-            if (titleClickCount >= 5) {
-                const adminPanel = document.getElementById('admin-panel');
-                adminPanel.classList.toggle('visible');
-                updateAdminLevelSelect();
-                titleClickCount = 0;
-            } else {
-                titleClickTimer = setTimeout(() => { titleClickCount = 0; }, 3000);
-            }
+    let currentDate = new Date().toLocaleDateString('en-CA');
+    document.getElementById('shift-date').value = currentDate;
+
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    /* Modal Controls */
+    function openConfirmModal() {
+        document.getElementById('confirm-modal').classList.add('active');
+    }
+    function closeConfirmModal() {
+        document.getElementById('confirm-modal').classList.remove('active');
+    }
+
+    /* Secret Admin Menu Counter (5 taps) */
+    let titleClickCount = 0;
+    let titleClickTimer = null;
+    function handleTitleClick() {
+        titleClickCount++;
+        clearTimeout(titleClickTimer);
+        if (titleClickCount >= 5) {
+            const adminPanel = document.getElementById('admin-panel');
+            adminPanel.classList.toggle('visible');
+            updateAdminLevelSelect();
+            populateAdminTechList();
+            titleClickCount = 0;
+        } else {
+            titleClickTimer = setTimeout(() => { titleClickCount = 0; }, 3000);
+        }
+    }
+
+    function updateAdminLevelSelect() {
+        const select = document.getElementById('select-level');
+        const currentSelected = select.value;
+        select.innerHTML = '';
+        stadiumData.forEach((sec, idx) => {
+            let opt = document.createElement('option');
+            opt.value = idx;
+            opt.innerText = sec.level;
+            select.appendChild(opt);
+        });
+        if (currentSelected !== "" && currentSelected < stadiumData.length) {
+            select.value = currentSelected;
+        }
+        populateAdminStandsList();
+    }
+
+    function populateAdminStandsList() {
+        const levelIdx = document.getElementById('select-level').value;
+        const container = document.getElementById('admin-stands-container');
+        container.innerHTML = '';
+
+        if (levelIdx === "" || !stadiumData[levelIdx]) return;
+
+        const stands = stadiumData[levelIdx].stands;
+        if (stands.length === 0) {
+            container.innerHTML = '<div style="color: #888; font-size: 11px;">No stands in this level yet.</div>';
+            return;
         }
 
-        function updateAdminLevelSelect() {
-            const select = document.getElementById('select-level');
-            const currentSelected = select.value;
-            select.innerHTML = '';
-            stadiumData.forEach((sec, idx) => {
-                let opt = document.createElement('option');
-                opt.value = idx;
-                opt.innerText = sec.level;
-                select.appendChild(opt);
+        stands.forEach((stand, standIdx) => {
+            const item = document.createElement('div');
+            item.className = 'admin-stand-list-item';
+            item.innerHTML = `
+                <span><b>${stand.id}</b> (${stand.size}lb, max ${stand.total})</span>
+                <div class="admin-stand-actions">
+                    <button class="admin-btn-sm" ${standIdx === 0 ? 'disabled style="opacity:0.3"' : ''} onclick="moveStand(${levelIdx}, ${standIdx}, -1)">▲</button>
+                    <button class="admin-btn-sm" ${standIdx === stands.length - 1 ? 'disabled style="opacity:0.3"' : ''} onclick="moveStand(${levelIdx}, ${standIdx}, 1)">▼</button>
+                    <button class="admin-btn-sm" onclick="editStandPrompt(${levelIdx}, ${standIdx})">Edit</button>
+                    <button class="admin-btn-sm admin-btn-danger" onclick="deleteStandFromAdmin(${levelIdx}, '${stand.id}')">✕</button>
+                </div>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    /* Technician Management */
+    function populateTechDropdown() {
+        const select = document.getElementById('technician-select');
+        select.innerHTML = '';
+        technicians.forEach(tech => {
+            let opt = document.createElement('option');
+            opt.value = tech;
+            opt.innerText = tech;
+            select.appendChild(opt);
+        });
+        select.value = currentTech;
+    }
+
+    function populateAdminTechList() {
+        const container = document.getElementById('admin-tech-container');
+        container.innerHTML = '';
+        technicians.forEach((tech, idx) => {
+            const item = document.createElement('div');
+            item.className = 'admin-stand-list-item';
+            item.innerHTML = `
+                <span><b>${tech}</b></span>
+                <div class="admin-stand-actions">
+                    <button class="admin-btn-sm" onclick="editTechPrompt(${idx})">Edit</button>
+                    <button class="admin-btn-sm admin-btn-danger" onclick="deleteTech(${idx})">✕</button>
+                </div>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    function addTech() {
+        const name = document.getElementById('new-tech-name').value.trim();
+        if (!name) return;
+        technicians.push(name);
+        saveTechs();
+        document.getElementById('new-tech-name').value = '';
+        populateAdminTechList();
+        populateTechDropdown();
+    }
+
+    function editTechPrompt(idx) {
+        const newName = prompt("Edit Technician Name:", technicians[idx]);
+        if (!newName || !newName.trim()) return;
+        technicians[idx] = newName.trim();
+        saveTechs();
+        populateAdminTechList();
+        populateTechDropdown();
+        if (currentTech === technicians[idx]) changeTech(technicians[idx]);
+    }
+
+    function deleteTech(idx) {
+        if (!confirm(`Delete technician ${technicians[idx]}?`)) return;
+        technicians.splice(idx, 1);
+        saveTechs();
+        populateAdminTechList();
+        populateTechDropdown();
+    }
+
+    function saveTechs() {
+        localStorage.setItem('angels_techs_v10', JSON.stringify(technicians));
+    }
+
+    function changeTech(newTech) {
+        currentTech = newTech;
+    }
+
+    function addLevel() {
+        const name = document.getElementById('new-level-name').value.trim();
+        if (!name) return;
+        stadiumData.push({ level: name, stands: [] });
+        saveConfig();
+        document.getElementById('new-level-name').value = '';
+        updateAdminLevelSelect();
+        render();
+    }
+
+    function addStand() {
+        const levelIdx = document.getElementById('select-level').value;
+        const id = document.getElementById('new-stand-id').value.trim();
+        const size = parseInt(document.getElementById('new-stand-size').value, 10);
+        const total = parseInt(document.getElementById('new-stand-total').value, 10);
+
+        if (!id || isNaN(total) || total < 1) return;
+
+        stadiumData[levelIdx].stands.push({ id, size, total });
+        saveConfig();
+        document.getElementById('new-stand-id').value = '';
+        document.getElementById('new-stand-total').value = '';
+        populateAdminStandsList();
+        render();
+    }
+
+    function deleteStandFromAdmin(levelIdx, standId) {
+        if (!confirm(`Delete stand ${standId}?`)) return;
+        stadiumData[levelIdx].stands = stadiumData[levelIdx].stands.filter(s => s.id !== standId);
+        saveConfig();
+        populateAdminStandsList();
+        render();
+    }
+
+    function moveStand(levelIdx, standIdx, direction) {
+        const stands = stadiumData[levelIdx].stands;
+        const targetIdx = standIdx + direction;
+        if (targetIdx < 0 || targetIdx >= stands.length) return;
+
+        const temp = stands[standIdx];
+        stands[standIdx] = stands[targetIdx];
+        stands[targetIdx] = temp;
+
+        saveConfig();
+        populateAdminStandsList();
+        render();
+    }
+
+    function editStandPrompt(levelIdx, standIdx) {
+        const stand = stadiumData[levelIdx].stands[standIdx];
+        const newId = prompt("Edit Stand ID:", stand.id);
+        if (newId === null) return;
+        const newSizeStr = prompt("Edit Fryer Size (50, 80, or 8):", stand.size);
+        if (newSizeStr === null) return;
+        const newTotalStr = prompt("Edit Max Fryer Count:", stand.total);
+        if (newTotalStr === null) return;
+
+        const size = parseInt(newSizeStr, 10);
+        const total = parseInt(newTotalStr, 10);
+
+        if (!newId.trim() || isNaN(size) || isNaN(total) || total < 1) return;
+
+        stand.id = newId.trim();
+        stand.size = size;
+        stand.total = total;
+
+        saveConfig();
+        populateAdminStandsList();
+        render();
+    }
+
+    function saveConfig() {
+        localStorage.setItem('angels_stadium_config_v10', JSON.stringify(stadiumData));
+    }
+
+    function getCurrentDateState() {
+        if (!allLogs[currentDate]) allLogs[currentDate] = {};
+        return allLogs[currentDate];
+    }
+
+    function changeDate(newDateStr) {
+        if (!newDateStr) return;
+        currentDate = newDateStr;
+        render();
+    }
+
+    function printReport() {
+        document.getElementById('print-date-label').innerText = `Date: ${currentDate} | Tech: ${currentTech}`;
+        window.print();
+    }
+
+    function parseNum(val) {
+        if (!val || String(val).toUpperCase() === 'NS') return 0;
+        let parsed = parseInt(val, 10);
+        return isNaN(parsed) || parsed < 0 ? 0 : parsed;
+    }
+
+    function findStand(id) {
+        for (let section of stadiumData) {
+            for (let stand of section.stands) {
+                if (stand.id === id) return stand;
+            }
+        }
+        return null;
+    }
+
+    function toggleDone(id, isChecked) {
+        let dayState = getCurrentDateState();
+        if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', comments: '', done: false, isNS: false };
+        dayState[id].done = isChecked;
+        saveLogs();
+        render();
+    }
+
+    function toggleNS(id) {
+        let dayState = getCurrentDateState();
+        if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', comments: '', done: false, isNS: false };
+        dayState[id].isNS = !dayState[id].isNS;
+        if (dayState[id].isNS) {
+            dayState[id].filter = 'NS';
+            dayState[id].dump = 'NS';
+        } else {
+            dayState[id].filter = '';
+            dayState[id].dump = '';
+        }
+        saveLogs();
+        render();
+    }
+
+    function adjustCount(id, field, delta) {
+        const stand = findStand(id);
+        if (!stand) return;
+
+        let dayState = getCurrentDateState();
+        if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', comments: '', done: false, isNS: false };
+        if (dayState[id].isNS) return;
+
+        let currentVal = parseNum(dayState[id][field]);
+        let newVal = currentVal + delta;
+        if (newVal < 0) newVal = 0;
+
+        dayState[id][field] = newVal === 0 ? '' : String(newVal);
+        saveLogs();
+        
+        const safeId = id.replace(/[^a-zA-Z0-9]/g, '_');
+        const inputEl = document.getElementById(`input-${field}-${safeId}`);
+        if (inputEl) inputEl.value = dayState[id][field];
+
+        validateStand(stand);
+        updateTotals();
+    }
+
+    function handleInput(id) {
+        const stand = findStand(id);
+        if (!stand) return;
+
+        const safeId = id.replace(/[^a-zA-Z0-9]/g, '_');
+        const filterEl = document.getElementById(`input-filter-${safeId}`);
+        const dumpEl = document.getElementById(`input-dump-${safeId}`);
+
+        let dayState = getCurrentDateState();
+        if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', comments: '', done: false, isNS: false };
+        dayState[id].filter = filterEl.value;
+        dayState[id].dump = dumpEl.value;
+
+        saveLogs();
+        validateStand(stand);
+        updateTotals();
+    }
+
+    function handleOil(id, value) {
+        let dayState = getCurrentDateState();
+        if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', comments: '', done: false, isNS: false };
+        dayState[id].oil = value;
+        saveLogs();
+        updateTotals();
+    }
+
+    function handleComment(id, value) {
+        let dayState = getCurrentDateState();
+        if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', comments: '', done: false, isNS: false };
+        dayState[id].comments = value;
+        saveLogs();
+    }
+
+    function saveLogs() {
+        localStorage.setItem('angels_fryer_logs_v10', JSON.stringify(allLogs));
+    }
+
+    function validateStand(stand) {
+        const safeId = stand.id.replace(/[^a-zA-Z0-9]/g, '_');
+        const filterEl = document.getElementById(`input-filter-${safeId}`);
+        const dumpEl = document.getElementById(`input-dump-${safeId}`);
+        const errEl = document.getElementById(`err-${safeId}`);
+        
+        if (!filterEl || !dumpEl || !errEl) return;
+
+        let fNum = parseNum(filterEl.value);
+        let dNum = parseNum(dumpEl.value);
+        let isOverLimit = (fNum + dNum) > stand.total;
+
+        if (isOverLimit) {
+            filterEl.classList.add('error-input');
+            dumpEl.classList.add('error-input');
+            errEl.classList.add('visible');
+        } else {
+            filterEl.classList.remove('error-input');
+            dumpEl.classList.remove('error-input');
+            errEl.classList.remove('visible');
+        }
+    }
+
+    function updateTotals() {
+        let f50 = 0, d50 = 0, f80 = 0, d80 = 0, totalOil = 0;
+        let dayState = getCurrentDateState();
+
+        stadiumData.forEach(section => {
+            section.stands.forEach(stand => {
+                let obj = dayState[stand.id];
+                if (!obj) return;
+
+                if (!obj.isNS) {
+                    let f = parseNum(obj.filter);
+                    let d = parseNum(obj.dump);
+                    if ((f + d) <= stand.total) {
+                        if (stand.size === 50) { f50 += f; d50 += d; }
+                        if (stand.size === 80) { f80 += f; d80 += d; }
+                    }
+                }
+
+                let oilVal = parseFloat(obj.oil);
+                if (!isNaN(oilVal)) totalOil += oilVal;
             });
-            if (currentSelected !== "" && currentSelected < stadiumData.length) {
-                select.value = currentSelected;
-            }
-            populateAdminStandsList();
+        });
+
+        document.getElementById('f50-val').innerText = f50;
+        document.getElementById('d50-val').innerText = d50;
+        document.getElementById('f80-val').innerText = f80;
+        document.getElementById('d80-val').innerText = d80;
+        document.getElementById('total-oil-val').innerText = totalOil.toFixed(1).replace(/\.0$/, '');
+    }
+
+    /* Stand-by-Stand Submission Logic */
+    async function executeSubmitToCloud() {
+        closeConfirmModal();
+        const submitBtn = document.getElementById('cloud-submit-btn');
+        const originalText = submitBtn.innerText;
+        submitBtn.disabled = true;
+
+        const dayState = getCurrentDateState();
+        const queue = [];
+
+        // Format Date: "Tue  1/27/2026 0:00:00"
+        const [year, month, day] = currentDate.split('-');
+        const dateObj = new Date(year, month - 1, day);
+        const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
+        const formattedTimestamp = `${dayOfWeek}  ${parseInt(month, 10)}/${parseInt(day, 10)}/${year} 0:00:00`;
+
+        stadiumData.forEach(section => {
+            section.stands.forEach(stand => {
+                const state = dayState[stand.id];
+                if (!state) return;
+
+                const isNS = state.isNS || false;
+                const fCount = parseNum(state.filter);
+                const dCount = parseNum(state.dump);
+                const oilUsed = parseFloat(state.oil) || 0;
+                const comments = state.comments || "";
+
+                // Skip NS if no oil logged
+                if (isNS && oilUsed <= 0) return;
+
+                // Skip serviced stands if completely empty
+                if (!isNS && fCount === 0 && dCount === 0 && oilUsed <= 0 && !comments) return;
+
+                let fieldVal = "", terraceVal = "", clubVal = "", viewVal = "";
+                if (section.level === "Field Level") fieldVal = stand.id;
+                else if (section.level === "Terrace Level") terraceVal = stand.id;
+                else if (section.level === "Club Level") clubVal = stand.id;
+                else if (section.level === "View Level") viewVal = stand.id;
+
+                queue.push({
+                    timestamp: formattedTimestamp,
+                    technician: currentTech,
+                    fieldLevel: fieldVal,
+                    terraceLevel: terraceVal,
+                    clubLevel: clubVal,
+                    viewLevel: viewVal,
+                    totalFryers: isNS ? "" : stand.total,
+                    comments: comments,
+                    f50Filtered: (!isNS && stand.size === 50 && fCount > 0) ? fCount : "",
+                    f50Dumped: (!isNS && stand.size === 50 && dCount > 0) ? dCount : "",
+                    f80Filtered: (!isNS && stand.size === 80 && fCount > 0) ? fCount : "",
+                    f80Dumped: (!isNS && stand.size === 80 && dCount > 0) ? dCount : "",
+                    oilUsed: oilUsed > 0 ? oilUsed : ""
+                });
+            });
+        });
+
+        if (queue.length === 0) {
+            alert("No active entries or oil records to submit.");
+            submitBtn.disabled = false;
+            return;
         }
 
-        function populateAdminStandsList() {
-            const levelIdx = document.getElementById('select-level').value;
-            const container = document.getElementById('admin-stands-container');
-            container.innerHTML = '';
+        let completed = 0;
+        for (const rowPayload of queue) {
+            completed++;
+            submitBtn.innerText = `Log ${completed}/${queue.length}...`;
 
-            if (levelIdx === "" || !stadiumData[levelIdx]) return;
-
-            const stands = stadiumData[levelIdx].stands;
-            if (stands.length === 0) {
-                container.innerHTML = '<div style="color: #aaa; font-size: 12px; font-style: italic;">No stands in this level yet.</div>';
-                return;
+            try {
+                await fetch(WEB_APP_URL, {
+                    method: "POST",
+                    body: JSON.stringify(rowPayload)
+                });
+            } catch (err) {
+                console.error("Transmission error:", rowPayload, err);
             }
 
-            stands.forEach((stand, standIdx) => {
-                const item = document.createElement('div');
-                item.className = 'admin-stand-list-item';
-                item.innerHTML = `
-                    <span><b>${stand.id}</b> (${stand.size}lb, max ${stand.total})</span>
-                    <div class="admin-stand-actions">
-                        <button class="admin-btn-sm" ${standIdx === 0 ? 'disabled style="opacity:0.3"' : ''} onclick="moveStand(${levelIdx}, ${standIdx}, -1)">▲</button>
-                        <button class="admin-btn-sm" ${standIdx === stands.length - 1 ? 'disabled style="opacity:0.3"' : ''} onclick="moveStand(${levelIdx}, ${standIdx}, 1)">▼</button>
-                        <button class="admin-btn-sm" onclick="editStandPrompt(${levelIdx}, ${standIdx})">Edit</button>
-                        <button class="admin-btn-sm admin-btn-danger" onclick="deleteStandFromAdmin(${levelIdx}, '${stand.id}')">✕</button>
+            await sleep(LOG_DELAY_MS);
+        }
+
+        submitBtn.innerText = originalText;
+        submitBtn.disabled = false;
+        alert(`Successfully logged ${completed} stand record(s) to Google Sheet.`);
+    }
+
+    function render() {
+        const app = document.getElementById('app');
+        app.innerHTML = '';
+        const dayState = getCurrentDateState();
+
+        stadiumData.forEach(section => {
+            const levelDiv = document.createElement('div');
+            levelDiv.className = 'level-header';
+            levelDiv.innerText = section.level;
+            app.appendChild(levelDiv);
+
+            section.stands.forEach(stand => {
+                const standState = dayState[stand.id] || { filter: '', dump: '', oil: '', comments: '', done: false, isNS: false };
+                const safeId = stand.id.replace(/[^a-zA-Z0-9]/g, '_');
+                const isNS = standState.isNS || false;
+                const isDone = standState.done || false;
+
+                const card = document.createElement('div');
+                card.className = `card ${isDone ? 'completed' : ''} ${isNS ? 'is-ns' : ''}`;
+
+                let badgeClass = stand.size === 50 ? 'badge-50' : (stand.size === 80 ? 'badge-80' : 'badge-other');
+
+                let printDisplay = [];
+                if (isNS) {
+                    printDisplay.push("STATUS: NOT SERVICED (NS)");
+                } else {
+                    printDisplay.push(`Filtered: ${standState.filter || '0'}`);
+                    printDisplay.push(`Dumped: ${standState.dump || '0'}`);
+                }
+                if (standState.oil) printDisplay.push(`Oil: ${standState.oil} gal`);
+                if (standState.comments) printDisplay.push(`Note: ${standState.comments}`);
+
+                card.innerHTML = `
+                    <div class="card-top">
+                        <div class="stand-left">
+                            <input type="checkbox" class="card-checkbox" id="check-${safeId}" ${isDone ? 'checked' : ''} onchange="toggleDone('${stand.id}', this.checked)">
+                            <button class="ns-toggle-btn ${isNS ? 'active' : ''}" onclick="toggleNS('${stand.id}')">NS</button>
+                            <span class="stand-title">${stand.id}</span>
+                        </div>
+                        <span class="badge ${badgeClass}">${stand.size} lb (${stand.total} max)</span>
+                    </div>
+
+                    <div class="print-only-val">${printDisplay.join(" | ")}</div>
+
+                    <!-- Filtered Row -->
+                    <div class="card-row">
+                        <span class="info-text">Filtered count:</span>
+                        <div class="input-group">
+                            <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'filter', -1)">−</button>
+                            <input type="text" 
+                                   inputmode="numeric" 
+                                   pattern="[0-9]*" 
+                                   id="input-filter-${safeId}" 
+                                   value="${isNS ? 'NS' : standState.filter}" 
+                                   ${isNS ? 'disabled' : ''} 
+                                   placeholder="0" 
+                                   oninput="handleInput('${stand.id}')">
+                            <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'filter', 1)">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Dumped Row -->
+                    <div class="card-row">
+                        <span class="info-text">Dumped count:</span>
+                        <div class="input-group">
+                            <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'dump', -1)">−</button>
+                            <input type="text" 
+                                   inputmode="numeric" 
+                                   pattern="[0-9]*" 
+                                   id="input-dump-${safeId}" 
+                                   value="${isNS ? 'NS' : standState.dump}" 
+                                   ${isNS ? 'disabled' : ''} 
+                                   placeholder="0" 
+                                   oninput="handleInput('${stand.id}')">
+                            <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'dump', 1)">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Capacity Error Warning -->
+                    <div class="error-msg" id="err-${safeId}">⚠️ Filter + Dump cannot exceed max total (${stand.total})!</div>
+
+                    <!-- Oil Row -->
+                    <div class="card-row">
+                        <span class="info-text">Oil Used (gal):</span>
+                        <div class="input-group">
+                            <input type="text" 
+                                   inputmode="decimal" 
+                                   id="input-oil-${safeId}" 
+                                   value="${standState.oil || ''}" 
+                                   placeholder="Gal" 
+                                   oninput="handleOil('${stand.id}', this.value)">
+                        </div>
+                    </div>
+
+                    <!-- Stand Comments / Notes Row -->
+                    <div class="card-row" style="margin-top: 4px;">
+                        <input type="text" 
+                               class="comment-input" 
+                               value="${standState.comments || ''}" 
+                               placeholder="Add note for this stand..." 
+                               oninput="handleComment('${stand.id}', this.value)">
                     </div>
                 `;
-                container.appendChild(item);
+                app.appendChild(card);
+                setTimeout(() => validateStand(stand), 0);
             });
-        }
+        });
 
-        function addLevel() {
-            const name = document.getElementById('new-level-name').value.trim();
-            if (!name) return;
-            stadiumData.push({ level: name, stands: [] });
-            saveConfig();
-            document.getElementById('new-level-name').value = '';
-            updateAdminLevelSelect();
-            render();
-        }
+        updateTotals();
+    }
 
-        function addStand() {
-            const levelIdx = document.getElementById('select-level').value;
-            const id = document.getElementById('new-stand-id').value.trim();
-            const size = parseInt(document.getElementById('new-stand-size').value, 10);
-            const total = parseInt(document.getElementById('new-stand-total').value, 10);
+    // Initialize UI on Load
+    populateTechDropdown();
+    populateAdminTechList();
+    render();
+</script>
 
-            if (!id || isNaN(total) || total < 1) return;
-
-            stadiumData[levelIdx].stands.push({ id, size, total });
-            saveConfig();
-            document.getElementById('new-stand-id').value = '';
-            document.getElementById('new-stand-total').value = '';
-            populateAdminStandsList();
-            render();
-        }
-
-        function deleteStandFromAdmin(levelIdx, standId) {
-            if (!confirm(`Delete stand ${standId}?`)) return;
-            stadiumData[levelIdx].stands = stadiumData[levelIdx].stands.filter(s => s.id !== standId);
-            saveConfig();
-            populateAdminStandsList();
-            render();
-        }
-
-        function moveStand(levelIdx, standIdx, direction) {
-            const stands = stadiumData[levelIdx].stands;
-            const targetIdx = standIdx + direction;
-            if (targetIdx < 0 || targetIdx >= stands.length) return;
-
-            const temp = stands[standIdx];
-            stands[standIdx] = stands[targetIdx];
-            stands[targetIdx] = temp;
-
-            saveConfig();
-            populateAdminStandsList();
-            render();
-        }
-
-        function editStandPrompt(levelIdx, standIdx) {
-            const stand = stadiumData[levelIdx].stands[standIdx];
-            const newId = prompt("Edit Stand ID:", stand.id);
-            if (newId === null) return;
-            const newSizeStr = prompt("Edit Fryer Size (50, 80, or 8):", stand.size);
-            if (newSizeStr === null) return;
-            const newTotalStr = prompt("Edit Max Fryer Count:", stand.total);
-            if (newTotalStr === null) return;
-
-            const size = parseInt(newSizeStr, 10);
-            const total = parseInt(newTotalStr, 10);
-
-            if (!newId.trim() || isNaN(size) || isNaN(total) || total < 1) {
-                alert("Invalid inputs provided. Changes not saved.");
-                return;
-            }
-
-            stand.id = newId.trim();
-            stand.size = size;
-            stand.total = total;
-
-            saveConfig();
-            populateAdminStandsList();
-            render();
-        }
-
-        function saveConfig() {
-            localStorage.setItem('angels_stadium_config_v10', JSON.stringify(stadiumData));
-        }
-
-        function getCurrentDateState() {
-            if (!allLogs[currentDate]) {
-                allLogs[currentDate] = {};
-            }
-            return allLogs[currentDate];
-        }
-
-        function changeDate(newDateStr) {
-            if (!newDateStr) return;
-            currentDate = newDateStr;
-            render();
-        }
-
-        function printReport() {
-            document.getElementById('print-date-label').innerText = `Date: ${currentDate}`;
-            window.print();
-        }
-
-        function render() {
-            const app = document.getElementById('app');
-            app.innerHTML = '';
-            const dayState = getCurrentDateState();
-
-            stadiumData.forEach(section => {
-                const levelDiv = document.createElement('div');
-                levelDiv.className = 'level-header';
-                levelDiv.innerText = section.level;
-                app.appendChild(levelDiv);
-
-                section.stands.forEach(stand => {
-                    const standState = dayState[stand.id] || { filter: '', dump: '', oil: '', done: false, isNS: false };
-                    const filterVal = standState.filter;
-                    const dumpVal = standState.dump;
-                    const oilVal = standState.oil;
-                    const isDone = standState.done || false;
-                    const isNS = standState.isNS || false;
-
-                    const card = document.createElement('div');
-                    card.className = `card ${isDone ? 'completed' : ''} ${isNS ? 'is-ns' : ''}`;
-
-                    let badgeClass = 'badge-other';
-                    if (stand.size === 50) badgeClass = 'badge-50';
-                    if (stand.size === 80) badgeClass = 'badge-80';
-
-                    const safeId = stand.id.replace(/[^a-zA-Z0-9]/g, '_');
-
-                    let printDisplay = [];
-                    if (isNS) {
-                        printDisplay.push("STATUS: NOT SERVICED (NS)");
-                    } else {
-                        printDisplay.push(`Filtered: ${filterVal || '0'}`);
-                        printDisplay.push(`Dumped: ${dumpVal || '0'}`);
-                    }
-                    if (oilVal) printDisplay.push(`Oil: ${oilVal} gal`);
-                    const printStr = printDisplay.join(" | ");
-
-                    card.innerHTML = `
-                        <div class="card-top">
-                            <div class="stand-left">
-                                <input type="checkbox" id="check-${safeId}" ${isDone ? 'checked' : ''} onchange="toggleDone('${stand.id}', this.checked)">
-                                <button class="ns-toggle-btn ${isNS ? 'active' : ''}" onclick="toggleNS('${stand.id}')">NS</button>
-                                <span class="stand-title">${stand.id}</span>
-                            </div>
-                            <div>
-                                <span class="badge ${badgeClass}">${stand.size} lb (${stand.total} max)</span>
-                            </div>
-                        </div>
-
-                        <!-- Print Summary -->
-                        <div class="print-only-val">${printStr}</div>
-                        
-                        <!-- Filter Row -->
-                        <div class="card-row">
-                            <span class="info-text">Filtered count:</span>
-                            <div class="input-group">
-                                <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'filter', -1)">−</button>
-                                <input type="text" id="input-filter-${safeId}" value="${isNS ? 'NS' : filterVal}" ${isNS ? 'disabled' : ''} placeholder="Qty" oninput="handleInput('${stand.id}')">
-                                <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'filter', 1)">+</button>
-                            </div>
-                        </div>
-
-                        <!-- Dump Row -->
-                        <div class="card-row">
-                            <span class="info-text">Dumped count:</span>
-                            <div class="input-group">
-                                <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'dump', -1)">−</button>
-                                <input type="text" id="input-dump-${safeId}" value="${isNS ? 'NS' : dumpVal}" ${isNS ? 'disabled' : ''} placeholder="Qty" oninput="handleInput('${stand.id}')">
-                                <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'dump', 1)">+</button>
-                            </div>
-                        </div>
-
-                        <!-- Error Message Row -->
-                        <div class="error-msg" id="err-${safeId}">⚠️ Filter + Dump cannot exceed max total (${stand.total})!</div>
-
-                        <!-- Oil Row -->
-                        <div class="card-row">
-                            <span class="info-text">Oil Used (gal):</span>
-                            <div class="input-group">
-                                <input type="text" id="input-oil-${safeId}" value="${oilVal}" placeholder="Gal" oninput="handleOil('${stand.id}', this.value)">
-                            </div>
-                        </div>
-                    `;
-                    app.appendChild(card);
-                    
-                    setTimeout(() => validateStand(stand), 0);
-                });
-            });
-
-            updateTotals();
-        }
-
-        function toggleDone(id, isChecked) {
-            let dayState = getCurrentDateState();
-            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
-            dayState[id].done = isChecked;
-            saveLogs();
-            render();
-        }
-
-        function toggleNS(id) {
-            let dayState = getCurrentDateState();
-            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
-            dayState[id].isNS = !dayState[id].isNS;
-            
-            if (dayState[id].isNS) {
-                dayState[id].filter = 'NS';
-                dayState[id].dump = 'NS';
-            } else {
-                dayState[id].filter = '';
-                dayState[id].dump = '';
-            }
-            saveLogs();
-            render();
-        }
-
-        function adjustCount(id, field, delta) {
-            const stand = findStand(id);
-            if (!stand) return;
-
-            let dayState = getCurrentDateState();
-            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
-            if (dayState[id].isNS) return;
-
-            let currentVal = parseNum(dayState[id][field]);
-            let newVal = currentVal + delta;
-            if (newVal < 0) newVal = 0;
-
-            dayState[id][field] = newVal === 0 ? '' : String(newVal);
-
-            saveLogs();
-            
-            const safeId = id.replace(/[^a-zA-Z0-9]/g, '_');
-            const inputEl = document.getElementById(`input-${field}-${safeId}`);
-            if (inputEl) {
-                inputEl.value = dayState[id][field];
-            }
-
-            validateStand(stand);
-            updateTotals();
-        }
-
-        function handleInput(id) {
-            const stand = findStand(id);
-            if (!stand) return;
-
-            const safeId = id.replace(/[^a-zA-Z0-9]/g, '_');
-            const filterEl = document.getElementById(`input-filter-${safeId}`);
-            const dumpEl = document.getElementById(`input-dump-${safeId}`);
-
-            let dayState = getCurrentDateState();
-            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
-            dayState[id].filter = filterEl.value;
-            dayState[id].dump = dumpEl.value;
-
-            saveLogs();
-            validateStand(stand);
-            updateTotals();
-        }
-
-        function handleOil(id, value) {
-            let dayState = getCurrentDataStateSafe(id, value);
-        }
-
-        function getDayStateDirect(id, value) {
-            let dayState = getCurrentDateState();
-            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
-            dayState[id].oil = value;
-            saveLogs();
-            updateTotals();
-            // Removed the full re-render() call here so typing into the oil field won't wipe focus or scroll the page!
-        }
-
-        function getCurrentDataStateSafe(id, value) {
-            getDayStateDirect(id, value);
-        }
-
-        function saveLogs() {
-            localStorage.setItem('angels_fryer_logs_v10', JSON.stringify(allLogs));
-        }
-
-        function findStand(id) {
-            for (let section of stadiumData) {
-                for (let stand of section.stands) {
-                    if (stand.id === id) return stand;
-                }
-            }
-            return null;
-        }
-
-        function parseNum(val) {
-            if (val === undefined || val === null || val === '') return 0;
-            let str = String(val).toUpperCase();
-            if (str === 'NS') return 0;
-            let parsed = parseInt(val, 10);
-            return isNaN(parsed) || parsed < 0 ? 0 : parsed;
-        }
-
-        function validateStand(stand) {
-            const safeId = stand.id.replace(/[^a-zA-Z0-9]/g, '_');
-            const filterEl = document.getElementById(`input-filter-${safeId}`);
-            const dumpEl = document.getElementById(`input-dump-${safeId}`);
-            const errEl = document.getElementById(`err-${safeId}`);
-            
-            if (!filterEl || !dumpEl || !errEl) return;
-
-            let fNum = parseNum(filterEl.value);
-            let dNum = parseNum(dumpEl.value);
-
-            let isOverLimit = (fNum + dNum) > stand.total;
-
-            if (isOverLimit) {
-                filterEl.classList.add('error-input');
-                dumpEl.classList.add('error-input');
-                errEl.classList.add('visible');
-            } else {
-                filterEl.classList.remove('error-input');
-                dumpEl.classList.remove('error-input');
-                errEl.classList.remove('visible');
-            }
-        }
-
-        function updateTotals() {
-            let f50 = 0, d50 = 0;
-            let f80 = 0, d80 = 0;
-            let totalOil = 0;
-            let dayState = getCurrentDateState();
-
-            stadiumData.forEach(section => {
-                section.stands.forEach(stand => {
-                    let standObj = dayState[stand.id];
-                    if (!standObj) return;
-
-                    if (!standObj.isNS) {
-                        let fNum = parseNum(standObj.filter);
-                        let dNum = parseNum(standObj.dump);
-
-                        if ((fNum + dNum) <= stand.total) {
-                            if (stand.size === 50) {
-                                f50 += fNum;
-                                d50 += dNum;
-                            } else if (stand.size === 80) {
-                                f80 += fNum;
-                                d80 += dNum;
-                            }
-                        }
-                    }
-
-                    if (standObj.oil !== undefined && standObj.oil !== '') {
-                        let parsedOil = parseFloat(standObj.oil);
-                        if (!isNaN(parsedOil)) {
-                            totalOil += parsedOil;
-                        }
-                    }
-                });
-            });
-
-            document.getElementById('f50-val').innerText = f50;
-            document.getElementById('d50-val').innerText = d50;
-            document.getElementById('f80-val').innerText = f80;
-            document.getElementById('d80-val').innerText = d80;
-            document.getElementById('total-oil-val').innerText = totalOil.toFixed(1).replace(/\.0$/, '');
-        }
-
-        render();
-    </script>
 </body>
 </html>
