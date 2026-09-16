@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Mobile Viewport with iPhone Notch / Island Support -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Angels Stadium Fryers</title>
+    <title>Angel's Stadium Filta Service</title>
     
     <!-- Small Favicon (Browser Tabs) -->
 <link rel="icon" type="image/png" sizes="32x32" href="filtasmallfavicon.png">
@@ -27,6 +27,11 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#121212">
 
+    <!-- Cache-Busting Headers to ensure changes load immediately -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
     <style>
         :root {
             --app-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -43,7 +48,7 @@
             --text-heading: #ffffff;
 			  --text-z: #7cbb4e;
 			  --text-x: #0479cb;
-			  --text-y: ##1ba829;
+			  --text-y: #1ba829;
             --border-color: #7cbb4e;
             --border-completed: #34c759;
             --border-ns: #ba0021;
@@ -79,6 +84,13 @@
             user-select: none;
             margin: 4px 0 10px 0;
             text-align: center;
+        }
+        
+        .header-logo-img {
+            height: 24px;
+            width: auto;
+            object-fit: contain;
+            border-radius: 3px;
         }
 
         h1 {
@@ -126,7 +138,7 @@
         .control-bar input[type="date"] {
             background: #2a2a2a;
             color: #fff;
-            border: 1px solid #444;
+            border: 1px solid #1ba829;
             padding: 5px 8px;
             border-radius: var(--box-radius-sm);
             font-size: 13px;
@@ -154,7 +166,7 @@
         .admin-panel {
             display: none;
             background: var(--bg-admin);
-            border: 1px solid var(--accent-gold);
+            border: 1px solid var(--text-y);
             padding: 12px;
             border-radius: var(--box-radius-md);
             margin-bottom: 14px;
@@ -468,8 +480,8 @@
         }
 
         <footer class="app-footer">
-    <img src="img/FiltaLogo.jpg" alt="Filta Logo" class="footer-logo" onerror="this.style.display='none'">
-    <span class="footer-caption">Filta Environmental Kitchen Solutions</span>
+    <img src="img/filtafooterlogo.png" alt="Filta Logo" class="footer-logo" onerror="this.style.display='none'">
+    <span class="footer-caption">Filta®OC™</span>
 </footer>
 
         .print-only-val { display: none; }
@@ -570,7 +582,7 @@
         }
     </style>
 </head>
-<body>
+</body>
 
 <div class="print-header">
     <h1>Angel's Stadium TxT</h1>
@@ -579,6 +591,7 @@
 
 <!-- Header (Tap 5 times to reveal Secret Menu) -->
 <div class="header-container" onclick="handleTitleClick()">
+    <span class="header-logo-img"><img src="filtalogo.png"</span>
     <h1>Angel's Stadium</h1>
     <span class="sub-header-tag">Service Log</span>
 </div>
@@ -597,7 +610,6 @@
         <select id="new-stand-size">
             <option value="50">50 lb</option>
             <option value="80">80 lb</option>
-            <option value="8">8 lb</option>
         </select>
         <input type="number" id="new-stand-total" placeholder="Max Count (e.g. 4)">
         <button class="action-btn" style="background: var(--accent-green);" onclick="addStand()">Add Stand</button>
