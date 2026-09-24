@@ -4,33 +4,24 @@
     <meta charset="UTF-8">
     <!-- Mobile Viewport with iPhone Notch / Island Support -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Angel's Stadium Filta Service</title>
-    
-    <!-- Small Favicon (Browser Tabs) -->
-<link rel="icon" type="image/png" sizes="32x32" href="filtasmallfaviconlogo.png">
-<link rel="shortcut icon" href="filtasmallfaviconl.ico">
-
-<!-- Large Favicon / Home Screen Icon (iOS & Android) -->
-<link rel="apple-touch-icon" sizes="180x180" href="filtalargefaviconlogo.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-
+    <title>Angels Stadium Fryers</title>
 
     <!-- iOS Standalone Web App Capabilities -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Filta Tracker">
 
-    <!-- Home Screen Icon (Replace with your icon filename or URL) -->
-    <link rel="apple-touch-icon" href="filtalargefaviconlogo.png">
+    <!-- Small Favicon (Browser Tabs) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="angelsfilta3dicon.png">
+    <link rel="shortcut icon" href="angelsfilta3dicon.png">
+
+    <!-- Large Favicon & Apple Touch Icon (Home Screen & High-Res Displays) -->
+    <link rel="apple-touch-icon" sizes="180x180" href="angelsfilta3dicon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="angelsfilta3dicon.png">
 
     <!-- Android / Chrome Web App Support -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#121212">
-
-    <!-- Cache-Busting Headers to ensure changes load immediately -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
 
     <style>
         :root {
@@ -46,16 +37,47 @@
             --text-main: #e0e0e0;
             --text-muted: #8e8e93;
             --text-heading: #ffffff;
-			  --text-z: #7cbb4e;
-			  --text-x: #0479cb;
-			  --text-y: #1ba829;
-            --border-color: #7cbb4e;
+            --text-z: #7cbb4e;
+            --text-x: #0479cb;
+            --text-y: #1ba829;
+            --border-color: #333333;
+            --border-green: #1ba829;
             --border-completed: #34c759;
             --border-ns: #ba0021;
             --accent-blue: #007aff;
             --accent-green: #34c759;
             --accent-gold: #ff9500;
             --accent-red: #ff3b30;
+            --box-radius-md: 8px;
+            --box-radius-sm: 5px;
+
+            --app-font-family: -apple-system, BlinkMacSystemFont, Segoe UI, "Roboto", Helvetica, Arial, sans-serif;
+            --bg-body: #121212;
+            --bg-control-bar: #1e1e1e;
+            --bg-dashboard: #1e1e1e;
+            --bg-card: #1e1e1e;
+            --bg-card-completed: #152419;
+            --bg-card-ns: #1a1a1a;
+            --bg-subbox: #262626;
+            --bg-admin: #222222;
+            
+            --text-main: #09700c;
+            --text-muted: #09700c;
+            --text-heading: #09700c;
+            --text-accent-blue: #0479cb;
+            --text-accent-green: #1ba829;
+            --text-accent-lightgreen: #7cbb4e;
+            
+            --border-color: #09700c;
+            --border-completed: #34c759;
+            --border-ns: #ba0021;
+            
+            --accent-blue: #007aff;
+            --accent-green: #34c759;
+            --accent-gold: #ff9500;
+            --accent-red: #ff3b30;
+            --Accent-purple: #510666;
+            
             --box-radius-md: 8px;
             --box-radius-sm: 5px;
         }
@@ -77,7 +99,7 @@
         /* Compact Header Container */
         .header-container {
             display: flex;
-            align-items: baseline;
+            align-items: center;
             justify-content: center;
             gap: 8px;
             cursor: pointer;
@@ -85,12 +107,12 @@
             margin: 4px 0 10px 0;
             text-align: center;
         }
-        
-        .header-logo-img {
+
+        .header-logo {
             height: 24px;
-            width: auto;
+            max-width: 32px;
             object-fit: contain;
-            border-radius: 3px;
+            display: inline-block;
         }
 
         h1 {
@@ -119,8 +141,8 @@
             background: var(--bg-control-bar);
             padding: 8px 12px;
             border-radius: var(--box-radius-md);
-            border: 1px solid var(--border-color);
-            margin-bottom: 10px;
+            border: 1px solid var(--border-green);
+            margin-bottom: 8px;
             flex-wrap: wrap;
             gap: 8px;
         }
@@ -138,7 +160,7 @@
         .control-bar input[type="date"] {
             background: #2a2a2a;
             color: #fff;
-            border: 1px solid #1ba829;
+            border: 1px solid #444;
             padding: 5px 8px;
             border-radius: var(--box-radius-sm);
             font-size: 13px;
@@ -158,15 +180,50 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
+            user-select: none;
         }
         .action-btn:active { opacity: 0.75; }
         .cloud-btn { background: var(--accent-green); }
+
+        /* AI Quick Dictate / Log Bar */
+        .quick-log-bar {
+            background: #18221c;
+            border: 1px solid #234d31;
+            border-radius: var(--box-radius-md);
+            padding: 7px 10px;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .quick-log-input {
+            flex: 1;
+            background: #121915;
+            border: 1px solid #2d5a3c;
+            color: #ffffff;
+            font-size: 12px;
+            padding: 5px 8px;
+            border-radius: var(--box-radius-sm);
+            outline: none;
+        }
+        .quick-log-input::placeholder { color: #5a8a69; }
+        .quick-log-btn {
+            background: #1ba829;
+            color: #ffffff;
+            border: none;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 10px;
+            border-radius: var(--box-radius-sm);
+            cursor: pointer;
+            white-space: nowrap;
+        }
 
         /* Secret Menu Admin Panel */
         .admin-panel {
             display: none;
             background: var(--bg-admin);
-            border: 1px solid var(--text-y);
+            border: 1px solid var(--accent-gold);
             padding: 12px;
             border-radius: var(--box-radius-md);
             margin-bottom: 14px;
@@ -229,7 +286,7 @@
         /* Summary Dashboard */
         .dashboard {
             background: var(--bg-dashboard);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border-green);
             border-radius: var(--box-radius-md);
             padding: 8px 10px;
             margin-bottom: 12px;
@@ -287,22 +344,18 @@
             font-weight: 800;
             margin: 14px 0 6px 0;
             color: var(--accent-gold);
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-green);
             padding-bottom: 3px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        /* =======================================================
-           COMPRESSED CARD LAYOUT (Full fonts, compact spacing)
-           ======================================================= */
+        /* Compressed Card Layout */
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--box-radius-md);
-            /* Tightened padding: saves ~12px vertical space per card */
             padding: 6px 10px;
-            /* Tightened spacing between cards */
             margin-bottom: 6px;
             transition: border-color 0.15s, background-color 0.15s;
         }
@@ -328,7 +381,6 @@
             gap: 7px;
         }
 
-        /* Card Checkbox */
         .card-checkbox {
             width: 17px;
             height: 17px;
@@ -337,7 +389,6 @@
             margin: 0;
         }
 
-        /* Stand Title: 100% original bold readable font */
         .stand-title {
             font-size: 15px;
             font-weight: 700;
@@ -345,7 +396,6 @@
             letter-spacing: -0.2px;
         }
 
-        /* Badges */
         .badge {
             font-size: 11px;
             padding: 1px 6px;
@@ -369,16 +419,13 @@
             border: 1px solid #444;
         }
 
-        /* Compact Rows */
         .card-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            /* Reduced vertical spacing from 8px down to 3px */
             margin-top: 3px;
         }
 
-        /* Labels: Crisp 12-13px font */
         .info-text {
             color: var(--text-muted);
             font-size: 12px;
@@ -391,11 +438,10 @@
             gap: 3px;
         }
 
-        /* Compact Stepper Buttons */
         .stepper-btn {
             background: #2e2e30;
             color: #ffffff;
-            border: 1px solid #1ba829;
+            border: 1px solid var(--border-green);
             width: 28px;
             height: 26px;
             border-radius: var(--box-radius-sm);
@@ -408,18 +454,15 @@
             user-select: none;
             padding: 0;
         }
-        .stepper-btn:active {
-            background: #444;
-        }
+        .stepper-btn:active { background: #444; }
 
-        /* Numeric Inputs: tight vertical padding, full 13px font */
         .card-row input[type="text"] {
             width: 44px;
             height: 26px;
             box-sizing: border-box;
             background: #2a2a2a;
             color: #ffffff;
-            border: 1px solid #1ba829;
+            border: 1px solid var(--border-green);
             text-align: center;
             padding: 0 3px;
             border-radius: var(--box-radius-sm);
@@ -431,11 +474,10 @@
             border-color: var(--text-y);
         }
 
-        /* Compact NS Toggle Button */
         .ns-toggle-btn {
             background: #2a2a2a;
             color: #888;
-            border: 1px #1ba829;
+            border: 1px solid var(--border-green);
             padding: 2px 6px;
             border-radius: 4px;
             font-size: 11px;
@@ -447,23 +489,6 @@
             background: var(--accent-red);
             color: white;
             border-color: var(--accent-red);
-        }
-
-        /* Stand Note / Comments Input */
-        .comment-input {
-            width: 100%;
-            height: 24px;
-            box-sizing: border-box;
-            background: #222222;
-            color: #fff;
-            border: 1px #1ba829;
-            border-radius: 4px;
-            font-size: 11px;
-            padding: 2px 6px;
-            outline: none;
-        }
-        .comment-input:focus {
-            border-color: var(--accent-gold);
         }
 
         .error-msg {
@@ -479,14 +504,52 @@
             background: #2c1616 !important;
         }
 
-        <footer class="app-footer">
-    <img src="img/filtaoclogo.png" alt="Filta Logo" class="footer-logo" onerror="this.style.display='none'">
-    <span class="footer-caption">Filta®OC™</span>
-</footer>
+        /* Standalone Shift Comments Level */
+        .shift-comment-box {
+            width: 100%;
+            height: 70px;
+            background: #181818;
+            border: 1px solid var(--border-green);
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 12px;
+            border-radius: var(--box-radius-sm);
+            padding: 8px;
+            box-sizing: border-box;
+            resize: vertical;
+            outline: none;
+        }
+        .shift-comment-box:focus { border-color: var(--accent-gold); }
 
-        .print-only-val { display: none; }
+        /* Footer Layout & Logo Styling */
+        .app-footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 10px 14px 10px;
+            margin-top: 18px;
+            border-top: 1px solid #262626;
+            text-align: center;
+        }
+        .footer-logo {
+            max-height: 38px;
+            max-width: 140px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            margin-bottom: 6px;
+            filter: brightness(0.95);
+        }
+        .footer-caption {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
 
-        /* Modal Confirmation */
+        /* Modals & Dialogs */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -495,7 +558,8 @@
             z-index: 1000;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(2px);
+            backdrop-filter: blur(3px);
+            padding: 12px;
         }
         .modal-overlay.active { display: flex; }
         .modal-box {
@@ -503,9 +567,10 @@
             border: 1px solid #444;
             border-radius: 10px;
             padding: 18px 20px;
-            max-width: 310px;
+            width: 100%;
+            max-width: 330px;
             text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
         }
         .modal-box p {
             margin: 0 0 16px 0;
@@ -530,6 +595,97 @@
         .modal-btn-cancel { background: #383838; color: #fff; }
         .modal-btn-confirm { background: var(--accent-green); color: #fff; }
 
+        /* In-App Printable Report Preview Modal */
+        .print-preview-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            backdrop-filter: blur(4px);
+        }
+        .print-preview-modal.active { display: flex; }
+        .print-sheet {
+            background: #ffffff;
+            color: #111111;
+            width: 100%;
+            max-width: 440px;
+            max-height: 88vh;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 16px 36px rgba(0,0,0,0.7);
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        .print-sheet-header {
+            background: #f4f4f5;
+            border-bottom: 1px solid #e4e4e7;
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .print-sheet-header h4 {
+            margin: 0;
+            font-size: 14px;
+            color: #18181b;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .print-sheet-content {
+            padding: 14px;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #27272a;
+        }
+        .print-sheet-footer {
+            background: #f4f4f5;
+            border-top: 1px solid #e4e4e7;
+            padding: 10px 14px;
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+        .sheet-btn {
+            padding: 7px 12px;
+            border-radius: 5px;
+            border: none;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .sheet-btn-secondary { background: #e4e4e7; color: #18181b; }
+        .sheet-btn-primary { background: #007aff; color: #ffffff; }
+        .sheet-btn-copy { background: #34c759; color: #ffffff; }
+
+        /* Toast Notifications */
+        #toast-notification {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: #f9fafb;
+            border: 1px solid var(--border-green);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: none;
+            z-index: 1200;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+            white-space: nowrap;
+        }
+
+        .print-only-val { display: none; }
+
         /* Print Layout Rules */
         @media print {
             body {
@@ -539,7 +695,7 @@
             }
             .control-bar, .admin-panel, .dashboard, .action-btn, 
             .stepper-btn, .ns-toggle-btn, .card-checkbox, .modal-overlay,
-            .card-row, .header-container {
+            .card-row, .header-container, .quick-log-bar, .app-footer, .print-preview-modal {
                 display: none !important;
             }
             .print-header {
@@ -559,9 +715,7 @@
                 margin-bottom: 5px !important;
                 padding: 6px 8px !important;
             }
-            .stand-title, .level-header {
-                color: black !important;
-            }
+            .stand-title, .level-header { color: black !important; }
             .level-header {
                 font-size: 13px !important;
                 margin-top: 10px !important;
@@ -582,16 +736,19 @@
         }
     </style>
 </head>
-</body>
+<body>
 
 <div class="print-header">
-    <h1>Angel's Stadium TxT</h1>
+    <h1>Angel's Stadium Fryers Log</h1>
     <div id="print-date-label" style="font-size: 12px; font-weight: bold; margin-top: 2px; color: #333;"></div>
 </div>
 
 <!-- Header (Tap 5 times to reveal Secret Menu) -->
 <div class="header-container" onclick="handleTitleClick()">
-    <span class="header-logo-img"><img src="filtalogo.png"</span>
+    <img src="angelslogo.png" 
+         alt="Logo" 
+         class="header-logo" 
+         onerror="this.src='filtalogo.png'; this.onerror=null;">
     <h1>Angel's Stadium</h1>
     <span class="sub-header-tag">Service Log</span>
 </div>
@@ -603,13 +760,14 @@
         <input type="text" id="new-level-name" placeholder="New Level Name">
         <button class="action-btn" onclick="addLevel()">Add Level</button>
     </div>
-    <hr style="border-color: #1ba829; margin: 8px 0;">
+    <hr style="border-color: var(--border-green); margin: 8px 0;">
     <div class="admin-form">
         <select id="select-level" onchange="populateAdminStandsList()"></select>
         <input type="text" id="new-stand-id" placeholder="Stand ID (e.g. #501)">
         <select id="new-stand-size">
             <option value="50">50 lb</option>
             <option value="80">80 lb</option>
+            <option value="8">8 lb</option>
         </select>
         <input type="number" id="new-stand-total" placeholder="Max Count (e.g. 4)">
         <button class="action-btn" style="background: var(--accent-green);" onclick="addStand()">Add Stand</button>
@@ -618,7 +776,7 @@
     <div id="admin-stands-container" style="max-height: 160px; overflow-y: auto;"></div>
 
     <!-- Secret Menu: Technician Editor -->
-    <hr style="border-color: #1ba829; margin: 12px 0 8px 0;">
+    <hr style="border-color: var(--border-green); margin: 12px 0 8px 0;">
     <h3>Secret Menu: Edit Technicians</h3>
     <div class="admin-form">
         <input type="text" id="new-tech-name" placeholder="Technician Name">
@@ -626,9 +784,31 @@
     </div>
     <div style="font-size: 11px; font-weight: 700; margin: 6px 0 4px 0; color: var(--accent-gold);">Manage Technicians:</div>
     <div id="admin-tech-container" style="max-height: 130px; overflow-y: auto;"></div>
+
+    <!-- Secret Menu: Admin Credentials & Executive AI Shift Report Suite -->
+    <hr style="border-color: var(--border-green); margin: 12px 0 8px 0;">
+    <h3>🔐 Admin & Executive AI Suite</h3>
+    <div id="admin-login-box" style="display: block;">
+        <div style="font-size: 11px; color: #aaa; margin-bottom: 6px;">Sign in to unlock Executive AI Shift Reports & Management:</div>
+        <div class="admin-form">
+            <input type="text" id="admin-user-input" placeholder="Admin Username (default: admin)">
+            <input type="password" id="admin-pass-input" placeholder="Password (default: filta2026)">
+            <button class="action-btn" onclick="handleAdminLogin()">Unlock Suite</button>
+        </div>
+    </div>
+    <div id="admin-logged-box" style="display: none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+            <span style="color: var(--accent-green); font-weight:700; font-size:12px;">✓ Executive Admin Unlocked</span>
+            <button class="admin-btn-sm" onclick="handleAdminLogout()">Lock Suite</button>
+        </div>
+        <div style="display:flex; gap: 6px; flex-wrap: wrap;">
+            <button class="action-btn" style="background: linear-gradient(135deg, #10b981, #0479cb);" onclick="generateAiShiftReport()">✨ Executive AI Shift Report</button>
+            <button class="admin-btn-sm" onclick="openChangePasswordModal()">Change Password</button>
+        </div>
+    </div>
 </div>
 
-<!-- Control Bar -->
+<!-- Control Bar (Clean: Tech, Shift, Print, Submit) -->
 <div class="control-bar">
     <div class="control-group">
         <label for="technician-select">Tech:</label>
@@ -642,6 +822,17 @@
         <button class="action-btn" onclick="printReport()">🖨️ Print</button>
         <button class="action-btn cloud-btn" id="cloud-submit-btn" onclick="openConfirmModal()">☁️ Submit</button>
     </div>
+</div>
+
+<!-- AI Smart Dictate & Quick Logger Bar -->
+<div class="quick-log-bar">
+    <span style="font-size: 13px;">🎙️</span>
+    <input type="text" 
+           id="quick-log-input" 
+           class="quick-log-input" 
+           placeholder="Speak or type: 'Stand 223 filtered 4 dumped 2 used 3 gal'..."
+           onkeydown="if(event.key==='Enter') executeQuickLog()">
+    <button class="quick-log-btn" id="quick-log-btn" onclick="executeQuickLog()">⚡ Quick Log</button>
 </div>
 
 <!-- Summary Dashboard -->
@@ -665,8 +856,32 @@
     </div>
 </div>
 
-<!-- App Stand Cards -->
+<!-- Stand Cards Container -->
 <div id="app"></div>
+
+<!-- Standalone Level for Comments & Notes -->
+<div class="level-header">Comments & Notes</div>
+<div class="card" style="margin-bottom: 14px;">
+    <div class="card-top" style="margin-bottom: 6px;">
+        <div class="stand-left">
+            <span style="font-size: 14px;">📝</span>
+            <span class="stand-title">General Shift Log Notes</span>
+        </div>
+    </div>
+    <textarea id="shift-general-comments" 
+              class="shift-comment-box" 
+              placeholder="Enter shift observations, maintenance requests, or special notes here..." 
+              oninput="handleShiftComment(this.value)"></textarea>
+</div>
+
+<!-- App Footer -->
+<footer class="app-footer">
+    <img src="filtafooterloogo.png" 
+         alt="Filta Logo" 
+         class="footer-logo" 
+         onerror="this.src='filtalogo.png'; this.onerror=null;">
+    <span class="footer-caption">Filta Environmental Kitchen Solutions</span>
+</footer>
 
 <!-- Confirmation Dialog Modal -->
 <div id="confirm-modal" class="modal-overlay">
@@ -678,6 +893,48 @@
         </div>
     </div>
 </div>
+
+<!-- In-App Print Preview Sheet -->
+<div id="print-preview-modal" class="print-preview-modal">
+    <div class="print-sheet">
+        <div class="print-sheet-header">
+            <h4>📄 Shift Service Report Preview</h4>
+            <button onclick="closePrintPreview()" style="background: none; border: none; font-size: 18px; font-weight: bold; cursor: pointer; color: #71717a;">✕</button>
+        </div>
+        <div id="print-sheet-body" class="print-sheet-content"></div>
+        <div class="print-sheet-footer">
+            <button class="sheet-btn sheet-btn-secondary" onclick="closePrintPreview()">Close</button>
+            <button class="sheet-btn sheet-btn-copy" onclick="copyPrintSheetText()">📋 Copy Text</button>
+            <button class="sheet-btn sheet-btn-primary" onclick="triggerSystemPrint()">🖨️ System Print</button>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Simple Prompt Modal (Replaces window.prompt) -->
+<div id="custom-prompt-modal" class="modal-overlay">
+    <div class="modal-box">
+        <p id="prompt-modal-title">Enter Value</p>
+        <input type="text" id="prompt-modal-input" style="width: 100%; box-sizing: border-box; background: #121212; color: #fff; border: 1px solid var(--border-green); padding: 7px; border-radius: 4px; font-size: 13px; margin-bottom: 12px; outline: none;">
+        <div class="modal-actions">
+            <button class="modal-btn modal-btn-cancel" onclick="closeCustomPrompt(null)">Cancel</button>
+            <button class="modal-btn modal-btn-confirm" onclick="submitCustomPrompt()">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Message Modal (Replaces window.alert) -->
+<div id="custom-alert-modal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 380px;">
+        <p id="alert-modal-title" style="font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 6px;"></p>
+        <div id="alert-modal-body" style="font-size: 12px; color: #ccc; line-height: 1.5; margin-bottom: 14px; text-align: left; max-height: 50vh; overflow-y: auto; white-space: pre-wrap;"></div>
+        <div class="modal-actions">
+            <button class="modal-btn modal-btn-confirm" onclick="closeCustomAlert()">OK</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast-notification"></div>
 
 <script>
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwOZFVD1iITEH34zV5g8PGmb4osXYWAM7fPUh-tmeDyMaBe3_YLJkJ4Tdzeb1CpzB2k/exec";
@@ -716,18 +973,69 @@
         ]}
     ];
 
-    let stadiumData = JSON.parse(localStorage.getItem('angels_stadium_config_v10')) || defaultData;
-    let allLogs = JSON.parse(localStorage.getItem('angels_fryer_logs_v10')) || {};
+    function getStoredJson(key, fallback) {
+        try {
+            const item = localStorage.getItem(key);
+            return item ? JSON.parse(item) : fallback;
+        } catch (e) {
+            return fallback;
+        }
+    }
+
+    let stadiumData = getStoredJson('angels_stadium_config_v10', defaultData);
+    let allLogs = getStoredJson('angels_fryer_logs_v10', {});
     let defaultTechs = ["Carlos Nuno", "Angel", "Manuel", "Moses"];
-    let technicians = JSON.parse(localStorage.getItem('angels_techs_v10')) || defaultTechs;
+    let technicians = getStoredJson('angels_techs_v10', defaultTechs);
     let currentTech = technicians[0] || "Carlos Nuno";
 
     let currentDate = new Date().toLocaleDateString('en-CA');
     document.getElementById('shift-date').value = currentDate;
 
+    let adminCredentials = getStoredJson('angels_admin_creds_v1', { user: "admin", pass: "filta2026" });
+    let isAdminUnlocked = false;
+
     const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-    /* Modal Controls */
+    /* Toast Notification Helper */
+    function showToast(msg) {
+        const toast = document.getElementById('toast-notification');
+        toast.innerText = msg;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 2600);
+    }
+
+    /* Modal Alert & Prompt Helpers */
+    let _promptCallback = null;
+    function openCustomPrompt(title, defaultValue, callback) {
+        _promptCallback = callback;
+        document.getElementById('prompt-modal-title').innerText = title;
+        const input = document.getElementById('prompt-modal-input');
+        input.value = defaultValue || '';
+        document.getElementById('custom-prompt-modal').classList.add('active');
+        input.focus();
+    }
+    function closeCustomPrompt(result) {
+        document.getElementById('custom-prompt-modal').classList.remove('active');
+        if (_promptCallback) {
+            const cb = _promptCallback;
+            _promptCallback = null;
+            cb(result);
+        }
+    }
+    function submitCustomPrompt() {
+        const val = document.getElementById('prompt-modal-input').value;
+        closeCustomPrompt(val);
+    }
+
+    function openCustomAlert(title, message) {
+        document.getElementById('alert-modal-title').innerText = title;
+        document.getElementById('alert-modal-body').innerText = message;
+        document.getElementById('custom-alert-modal').classList.add('active');
+    }
+    function closeCustomAlert() {
+        document.getElementById('custom-alert-modal').classList.remove('active');
+    }
+
     function openConfirmModal() {
         document.getElementById('confirm-modal').classList.add('active');
     }
@@ -746,10 +1054,43 @@
             adminPanel.classList.toggle('visible');
             updateAdminLevelSelect();
             populateAdminTechList();
+            renderAdminAuthState();
             titleClickCount = 0;
+            showToast("Secret Admin Menu toggled");
         } else {
             titleClickTimer = setTimeout(() => { titleClickCount = 0; }, 3000);
         }
+    }
+
+    /* Admin Authentication */
+    function handleAdminLogin() {
+        const u = document.getElementById('admin-user-input').value.trim();
+        const p = document.getElementById('admin-pass-input').value.trim();
+        if (u === adminCredentials.user && p === adminCredentials.pass) {
+            isAdminUnlocked = true;
+            renderAdminAuthState();
+            showToast("Admin credentials verified");
+        } else {
+            openCustomAlert("Access Denied", "Incorrect username or password. Default is admin / filta2026.");
+        }
+    }
+    function handleAdminLogout() {
+        isAdminUnlocked = false;
+        renderAdminAuthState();
+        showToast("Admin suite locked");
+    }
+    function renderAdminAuthState() {
+        document.getElementById('admin-login-box').style.display = isAdminUnlocked ? 'none' : 'block';
+        document.getElementById('admin-logged-box').style.display = isAdminUnlocked ? 'block' : 'none';
+    }
+    function openChangePasswordModal() {
+        openCustomPrompt("Enter New Admin Password:", adminCredentials.pass, (newPass) => {
+            if (newPass && newPass.trim()) {
+                adminCredentials.pass = newPass.trim();
+                localStorage.setItem('angels_admin_creds_v1', JSON.stringify(adminCredentials));
+                showToast("Admin password updated!");
+            }
+        });
     }
 
     function updateAdminLevelSelect() {
@@ -835,24 +1176,28 @@
         document.getElementById('new-tech-name').value = '';
         populateAdminTechList();
         populateTechDropdown();
+        showToast(`Technician "${name}" added`);
     }
 
     function editTechPrompt(idx) {
-        const newName = prompt("Edit Technician Name:", technicians[idx]);
-        if (!newName || !newName.trim()) return;
-        technicians[idx] = newName.trim();
-        saveTechs();
-        populateAdminTechList();
-        populateTechDropdown();
-        if (currentTech === technicians[idx]) changeTech(technicians[idx]);
+        openCustomPrompt("Edit Technician Name:", technicians[idx], (newName) => {
+            if (!newName || !newName.trim()) return;
+            technicians[idx] = newName.trim();
+            saveTechs();
+            populateAdminTechList();
+            populateTechDropdown();
+            if (currentTech === technicians[idx]) changeTech(technicians[idx]);
+        });
     }
 
     function deleteTech(idx) {
-        if (!confirm(`Delete technician ${technicians[idx]}?`)) return;
+        const target = technicians[idx];
         technicians.splice(idx, 1);
+        if (technicians.length === 0) technicians = ["Carlos Nuno"];
         saveTechs();
         populateAdminTechList();
         populateTechDropdown();
+        showToast(`Technician "${target}" removed`);
     }
 
     function saveTechs() {
@@ -871,6 +1216,7 @@
         document.getElementById('new-level-name').value = '';
         updateAdminLevelSelect();
         render();
+        showToast(`Level "${name}" added`);
     }
 
     function addStand() {
@@ -887,14 +1233,15 @@
         document.getElementById('new-stand-total').value = '';
         populateAdminStandsList();
         render();
+        showToast(`Stand "${id}" added`);
     }
 
     function deleteStandFromAdmin(levelIdx, standId) {
-        if (!confirm(`Delete stand ${standId}?`)) return;
         stadiumData[levelIdx].stands = stadiumData[levelIdx].stands.filter(s => s.id !== standId);
         saveConfig();
         populateAdminStandsList();
         render();
+        showToast(`Stand "${standId}" deleted`);
     }
 
     function moveStand(levelIdx, standIdx, direction) {
@@ -913,25 +1260,13 @@
 
     function editStandPrompt(levelIdx, standIdx) {
         const stand = stadiumData[levelIdx].stands[standIdx];
-        const newId = prompt("Edit Stand ID:", stand.id);
-        if (newId === null) return;
-        const newSizeStr = prompt("Edit Fryer Size (50, 80, or 8):", stand.size);
-        if (newSizeStr === null) return;
-        const newTotalStr = prompt("Edit Max Fryer Count:", stand.total);
-        if (newTotalStr === null) return;
-
-        const size = parseInt(newSizeStr, 10);
-        const total = parseInt(newTotalStr, 10);
-
-        if (!newId.trim() || isNaN(size) || isNaN(total) || total < 1) return;
-
-        stand.id = newId.trim();
-        stand.size = size;
-        stand.total = total;
-
-        saveConfig();
-        populateAdminStandsList();
-        render();
+        openCustomPrompt(`Edit Stand ID (${stand.id}):`, stand.id, (newId) => {
+            if (!newId || !newId.trim()) return;
+            stand.id = newId.trim();
+            saveConfig();
+            populateAdminStandsList();
+            render();
+        });
     }
 
     function saveConfig() {
@@ -949,9 +1284,131 @@
         render();
     }
 
+    function handleShiftComment(val) {
+        let dayState = getCurrentDateState();
+        dayState._comment = val;
+        saveLogs();
+    }
+
+    /* Print Preview & Sheet Generation */
     function printReport() {
         document.getElementById('print-date-label').innerText = `Date: ${currentDate} | Tech: ${currentTech}`;
-        window.print();
+        buildAndShowPrintPreview();
+    }
+
+    function buildAndShowPrintPreview() {
+        const dayState = getCurrentDateState();
+        let f50 = 0, d50 = 0, f80 = 0, d80 = 0, totalOil = 0;
+
+        let rowsHtml = '';
+        let textSummary = `ANGEL'S STADIUM SERVICE REPORT\nDate: ${currentDate} | Tech: ${currentTech}\n----------------------------------------\n`;
+
+        stadiumData.forEach(section => {
+            let sectionHasActivity = false;
+            let sectionRows = '';
+
+            section.stands.forEach(stand => {
+                const obj = dayState[stand.id];
+                if (!obj) return;
+
+                const isNS = obj.isNS || false;
+                const f = parseNum(obj.filter);
+                const d = parseNum(obj.dump);
+                const oil = parseFloat(obj.oil) || 0;
+
+                if (!isNS && f === 0 && d === 0 && oil <= 0) return;
+
+                sectionHasActivity = true;
+                if (!isNS) {
+                    if (stand.size === 50) { f50 += f; d50 += d; }
+                    if (stand.size === 80) { f80 += f; d80 += d; }
+                }
+                totalOil += oil;
+
+                const statusStr = isNS ? 'NOT SERVICED (NS)' : `Filtered: ${f} | Dumped: ${d}`;
+                const oilStr = oil > 0 ? ` | Oil: ${oil} gal` : '';
+
+                sectionRows += `
+                    <div style="display:flex; justify-content:space-between; border-bottom:1px dashed #e4e4e7; padding:4px 0;">
+                        <span><b>${stand.id}</b> (${stand.size}lb)</span>
+                        <span style="font-weight:600; color:#18181b;">${statusStr}${oilStr}</span>
+                    </div>
+                `;
+                textSummary += `${stand.id} (${stand.size}lb): ${statusStr}${oilStr}\n`;
+            });
+
+            if (sectionHasActivity) {
+                rowsHtml += `
+                    <div style="font-weight:800; text-transform:uppercase; color:#0479cb; margin:10px 0 4px 0; border-bottom:1px solid #0479cb; padding-bottom:2px;">
+                        ${section.level}
+                    </div>
+                    ${sectionRows}
+                `;
+            }
+        });
+
+        const generalNotes = (dayState._comment || '').trim();
+        if (generalNotes) {
+            textSummary += `\nShift Notes: ${generalNotes}\n`;
+        }
+
+        const totalsSummary = `50lb: F:${f50} / D:${d50} | 80lb: F:${f80} / D:${d80} | Total Oil: ${totalOil.toFixed(1).replace(/\.0$/, '')} gal`;
+        textSummary += `\nTOTALS: ${totalsSummary}\n`;
+
+        window._lastPrintSheetText = textSummary;
+
+        const bodyEl = document.getElementById('print-sheet-body');
+        bodyEl.innerHTML = `
+            <div style="border-bottom: 2px solid #18181b; padding-bottom: 8px; margin-bottom: 8px;">
+                <div style="font-size: 15px; font-weight: 800; color: #18181b;">Angel's Stadium Service Log</div>
+                <div style="font-size: 11px; font-weight: 600; color: #71717a;">Shift Date: <b>${currentDate}</b> | Tech: <b>${currentTech}</b></div>
+            </div>
+
+            <div style="background:#f4f4f5; border-radius:6px; padding:8px; margin-bottom:10px; font-size:11px;">
+                <div style="font-weight:700; margin-bottom:2px; color:#18181b;">Service Totals:</div>
+                <div>50 lb Fryers: <b>${f50} filtered</b> / <b>${d50} dumped</b></div>
+                <div>80 lb Fryers: <b>${f80} filtered</b> / <b>${d80} dumped</b></div>
+                <div>Fresh Oil Added: <b>${totalOil.toFixed(1).replace(/\.0$/, '')} gal</b></div>
+            </div>
+
+            ${rowsHtml || '<div style="color:#71717a; text-align:center; padding:12px;">No active stands logged for this shift yet.</div>'}
+
+            ${generalNotes ? `
+                <div style="margin-top:10px; border-top:1px solid #e4e4e7; padding-top:6px;">
+                    <div style="font-weight:700; color:#18181b; font-size:11px;">Comments & Notes:</div>
+                    <div style="font-size:11px; color:#52525b; white-space:pre-wrap; margin-top:2px;">${generalNotes}</div>
+                </div>
+            ` : ''}
+        `;
+
+        document.getElementById('print-preview-modal').classList.add('active');
+    }
+
+    function closePrintPreview() {
+        document.getElementById('print-preview-modal').classList.remove('active');
+    }
+
+    function triggerSystemPrint() {
+        try {
+            window.print();
+        } catch (e) {
+            showToast("System print blocked. Use 'Copy Text' to share.");
+        }
+    }
+
+    function copyPrintSheetText() {
+        if (!window._lastPrintSheetText) return;
+        const textarea = document.createElement('textarea');
+        textarea.value = window._lastPrintSheetText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            showToast("Report summary copied to clipboard!");
+        } catch (e) {
+            showToast("Failed to copy report text.");
+        }
+        document.body.removeChild(textarea);
     }
 
     function parseNum(val) {
@@ -971,7 +1428,7 @@
 
     function toggleDone(id, isChecked) {
         let dayState = getCurrentDateState();
-        if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', comments: '', done: false, isNS: false };
+        if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
         dayState[id].done = isChecked;
         saveLogs();
         render();
@@ -979,7 +1436,7 @@
 
     function toggleNS(id) {
         let dayState = getCurrentDateState();
-        if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', comments: '', done: false, isNS: false };
+        if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
         dayState[id].isNS = !dayState[id].isNS;
         if (dayState[id].isNS) {
             dayState[id].filter = 'NS';
@@ -997,7 +1454,7 @@
         if (!stand) return;
 
         let dayState = getCurrentDateState();
-        if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', comments: '', done: false, isNS: false };
+        if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
         if (dayState[id].isNS) return;
 
         let currentVal = parseNum(dayState[id][field]);
@@ -1024,7 +1481,7 @@
         const dumpEl = document.getElementById(`input-dump-${safeId}`);
 
         let dayState = getCurrentDateState();
-        if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', comments: '', done: false, isNS: false };
+        if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
         dayState[id].filter = filterEl.value;
         dayState[id].dump = dumpEl.value;
 
@@ -1035,17 +1492,10 @@
 
     function handleOil(id, value) {
         let dayState = getCurrentDateState();
-        if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', comments: '', done: false, isNS: false };
+        if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
         dayState[id].oil = value;
         saveLogs();
         updateTotals();
-    }
-
-    function handleComment(id, value) {
-        let dayState = getCurrentDateState();
-        if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', comments: '', done: false, isNS: false };
-        dayState[id].comments = value;
-        saveLogs();
     }
 
     function saveLogs() {
@@ -1105,7 +1555,113 @@
         document.getElementById('total-oil-val').innerText = totalOil.toFixed(1).replace(/\.0$/, '');
     }
 
-    /* Stand-by-Stand Submission Logic */
+    /* Quick Log NLP / Regex Parser */
+    function executeQuickLog() {
+        const inputEl = document.getElementById('quick-log-input');
+        const text = inputEl.value.trim();
+        if (!text) return;
+
+        const lower = text.toLowerCase();
+        let matchedStand = null;
+
+        // Try to match stand ID
+        for (let sec of stadiumData) {
+            for (let s of sec.stands) {
+                const sClean = s.id.toLowerCase().replace('#', '').trim();
+                if (lower.includes(s.id.toLowerCase()) || lower.includes(sClean)) {
+                    matchedStand = s;
+                    break;
+                }
+            }
+            if (matchedStand) break;
+        }
+
+        if (!matchedStand) {
+            showToast("Could not recognize stand. Try: 'Stand 223 filtered 4 dumped 2'");
+            return;
+        }
+
+        let dayState = getCurrentDateState();
+        if (!dayState[matchedStand.id]) {
+            dayState[matchedStand.id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
+        }
+
+        if (lower.includes('ns') || lower.includes('not serviced')) {
+            dayState[matchedStand.id].isNS = true;
+            dayState[matchedStand.id].filter = 'NS';
+            dayState[matchedStand.id].dump = 'NS';
+        } else {
+            dayState[matchedStand.id].isNS = false;
+            const filterMatch = lower.match(/(?:filter|f|filtered)\s*[:=]?\s*(\d+)/);
+            const dumpMatch = lower.match(/(?:dump|d|dumped)\s*[:=]?\s*(\d+)/);
+            const oilMatch = lower.match(/(?:oil|fresh)\s*[:=]?\s*(\d+(?:\.\d+)?)/);
+
+            if (filterMatch) dayState[matchedStand.id].filter = filterMatch[1];
+            if (dumpMatch) dayState[matchedStand.id].dump = dumpMatch[1];
+            if (oilMatch) dayState[matchedStand.id].oil = oilMatch[1];
+        }
+
+        dayState[matchedStand.id].done = true;
+        saveLogs();
+        render();
+        inputEl.value = '';
+        showToast(`Updated stand ${matchedStand.id}!`);
+    }
+
+    /* Executive AI Shift Report Generator (In Secret Menu) */
+    function generateAiShiftReport() {
+        const dayState = getCurrentDateState();
+        let activeRows = [];
+        let f50 = 0, d50 = 0, f80 = 0, d80 = 0, totalOil = 0;
+
+        stadiumData.forEach(sec => {
+            sec.stands.forEach(stand => {
+                const obj = dayState[stand.id];
+                if (!obj) return;
+                const isNS = obj.isNS || false;
+                const f = parseNum(obj.filter);
+                const d = parseNum(obj.dump);
+                const oil = parseFloat(obj.oil) || 0;
+
+                if (!isNS && f === 0 && d === 0 && oil <= 0) return;
+
+                if (!isNS) {
+                    if (stand.size === 50) { f50 += f; d50 += d; }
+                    if (stand.size === 80) { f80 += f; d80 += d; }
+                }
+                totalOil += oil;
+
+                activeRows.push(`${stand.id} (${stand.size}lb): ${isNS ? 'NS' : `F:${f}, D:${d}`}${oil > 0 ? `, Oil:${oil}gal` : ''}`);
+            });
+        });
+
+        const generalNotes = (dayState._comment || '').trim();
+
+        const report = `
+📊 ANGELS STADIUM EXECUTIVE SHIFT REPORT
+Date: ${currentDate} | Tech: ${currentTech}
+------------------------------------------------
+TOTALS OVERVIEW:
+• 50 lb Fryers: ${f50} Filtered / ${d50} Dumped
+• 80 lb Fryers: ${f80} Filtered / ${d80} Dumped
+• Total Fresh Oil Consumed: ${totalOil.toFixed(1)} Gallons
+• Total Stands Serviced: ${activeRows.length}
+
+SERVICED BREAKDOWN:
+${activeRows.join('\n') || 'No active stands logged yet.'}
+
+SHIFT NOTES:
+${generalNotes || 'None logged.'}
+
+RECOMMENDATIONS FOR NEXT SHIFT:
+${d50 + d80 > 8 ? '⚠️ High dump volume observed; ensure fresh oil stock is staged for next homestand.' : '✓ Normal oil lifecycle maintained.'}
+${activeRows.some(r => r.includes('NS')) ? '⚠️ Verify access codes for stands marked Not Serviced.' : '✓ Full route accessible.'}
+        `.trim();
+
+        openCustomAlert("Executive AI Shift Briefing", report);
+    }
+
+    /* Stand-by-Stand Submission Logic (Google Sheet Sync) */
     async function executeSubmitToCloud() {
         closeConfirmModal();
         const submitBtn = document.getElementById('cloud-submit-btn');
@@ -1114,6 +1670,7 @@
 
         const dayState = getCurrentDateState();
         const queue = [];
+        const shiftNote = (dayState._comment || '').trim();
 
         // Format Date: "Tue  1/27/2026 0:00:00"
         const [year, month, day] = currentDate.split('-');
@@ -1130,13 +1687,12 @@
                 const fCount = parseNum(state.filter);
                 const dCount = parseNum(state.dump);
                 const oilUsed = parseFloat(state.oil) || 0;
-                const comments = state.comments || "";
 
                 // Skip NS if no oil logged
                 if (isNS && oilUsed <= 0) return;
 
                 // Skip serviced stands if completely empty
-                if (!isNS && fCount === 0 && dCount === 0 && oilUsed <= 0 && !comments) return;
+                if (!isNS && fCount === 0 && dCount === 0 && oilUsed <= 0) return;
 
                 let fieldVal = "", terraceVal = "", clubVal = "", viewVal = "";
                 if (section.level === "Field Level") fieldVal = stand.id;
@@ -1152,7 +1708,7 @@
                     clubLevel: clubVal,
                     viewLevel: viewVal,
                     totalFryers: isNS ? "" : stand.total,
-                    comments: comments,
+                    comments: shiftNote,
                     f50Filtered: (!isNS && stand.size === 50 && fCount > 0) ? fCount : "",
                     f50Dumped: (!isNS && stand.size === 50 && dCount > 0) ? dCount : "",
                     f80Filtered: (!isNS && stand.size === 80 && fCount > 0) ? fCount : "",
@@ -1162,8 +1718,27 @@
             });
         });
 
+        // Fallback if only general notes exist without stand activity
+        if (queue.length === 0 && shiftNote) {
+            queue.push({
+                timestamp: formattedTimestamp,
+                technician: currentTech,
+                fieldLevel: "",
+                terraceLevel: "",
+                clubLevel: "",
+                viewLevel: "",
+                totalFryers: "",
+                comments: shiftNote,
+                f50Filtered: "",
+                f50Dumped: "",
+                f80Filtered: "",
+                f80Dumped: "",
+                oilUsed: ""
+            });
+        }
+
         if (queue.length === 0) {
-            alert("No active entries or oil records to submit.");
+            openCustomAlert("Submission Empty", "No active entries, oil records, or notes to submit for this shift.");
             submitBtn.disabled = false;
             return;
         }
@@ -1187,7 +1762,7 @@
 
         submitBtn.innerText = originalText;
         submitBtn.disabled = false;
-        alert(`Successfully logged ${completed} stand record(s) to Google Sheet.`);
+        openCustomAlert("Success", `Successfully logged ${completed} record(s) to Google Sheet.`);
     }
 
     function render() {
@@ -1202,7 +1777,7 @@
             app.appendChild(levelDiv);
 
             section.stands.forEach(stand => {
-                const standState = dayState[stand.id] || { filter: '', dump: '', oil: '', comments: '', done: false, isNS: false };
+                const standState = dayState[stand.id] || { filter: '', dump: '', oil: '', done: false, isNS: false };
                 const safeId = stand.id.replace(/[^a-zA-Z0-9]/g, '_');
                 const isNS = standState.isNS || false;
                 const isDone = standState.done || false;
@@ -1220,7 +1795,6 @@
                     printDisplay.push(`Dumped: ${standState.dump || '0'}`);
                 }
                 if (standState.oil) printDisplay.push(`Oil: ${standState.oil} gal`);
-                if (standState.comments) printDisplay.push(`Note: ${standState.comments}`);
 
                 card.innerHTML = `
                     <div class="card-top">
@@ -1283,20 +1857,17 @@
                                    oninput="handleOil('${stand.id}', this.value)">
                         </div>
                     </div>
-
-                    <!-- Stand Comments / Notes Row -->
-                    <div class="card-row" style="margin-top: 4px;">
-                        <input type="text" 
-                               class="comment-input" 
-                               value="${standState.comments || ''}" 
-                               placeholder="Add note for this stand..." 
-                               oninput="handleComment('${stand.id}', this.value)">
-                    </div>
                 `;
                 app.appendChild(card);
                 setTimeout(() => validateStand(stand), 0);
             });
         });
+
+        // Populate Shift Notes Box
+        const notesEl = document.getElementById('shift-general-comments');
+        if (notesEl) {
+            notesEl.value = dayState._comment || '';
+        }
 
         updateTotals();
     }
