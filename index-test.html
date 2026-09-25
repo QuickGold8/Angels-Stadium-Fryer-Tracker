@@ -320,11 +320,13 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2px;
+            gap: 8px;
         }
         .stand-left {
             display: flex;
             align-items: center;
             gap: 7px;
+            flex-wrap: wrap;
         }
         .card-checkbox {
             width: 17px;
@@ -430,6 +432,22 @@
             background: var(--accent-red);
             color: white;
             border-color: var(--accent-red);
+        }
+        .note-btn {
+            background: #2a2a2a;
+            color: #dfe6e9;
+            border: 1px solid #09700c;
+            border-radius: 4px;
+            padding: 3px 6px;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .note-btn.has-note {
+            background: rgba(28, 122, 50, 0.18);
+            color: var(--text-accent-lightgreen);
+            border-color: var(--text-accent-lightgreen);
         }
 
         /* General Comments Block & 3 Action Buttons */
@@ -569,49 +587,75 @@
             letter-spacing: 0.5px;
         }
 
-        /* Modal Overlays */
+        /* Modal Overlay Background */
         .modal-overlay {
+            display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            display: none;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
             justify-content: center;
             align-items: center;
-            z-index: 999;
         }
-        .modal-content {
-            background: var(--bg-control-bar);
-            border: 1px solid var(--border-color);
-            border-radius: var(--box-radius-md);
-            padding: 20px;
-            width: 80%;
-            max-width: 320px;
-            text-align: center;
-        }
-        .modal-content h3 { margin: 0 0 10px 0; color: #fff; font-size: 16px; }
-        .modal-content p { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
-        .modal-actions { display: flex; gap: 10px; justify-content: center; }
-        .btn-cancel {
-            background: #333; color: #fff; border: none;
-            padding: 10px 15px; border-radius: var(--box-radius-sm);
-            font-weight: bold; cursor: pointer; flex: 1;
-        }
-        .btn-confirm {
-            background: var(--accent-green); color: #fff; border: none;
-            padding: 10px 15px; border-radius: var(--box-radius-sm);
-            font-weight: bold; cursor: pointer; flex: 1;
-        }
-        .ai-spinner {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: #ffffff;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* The Modal Box Itself */
+        .modal-content {
+            background-color: #1a1a1a;
+            border: 2px solid #84cc16;
+            border-radius: 8px;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(132, 204, 22, 0.3);
+        }
+
+        /* The Text Area */
+        .modal-content textarea {
+            width: 100%;
+            height: 120px;
+            background: #2a2a2a;
+            color: #ffffff;
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 10px;
+            resize: none;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        /* Buttons */
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .save-btn { 
+            background-color: #84cc16; 
+            color: #000; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-weight: bold; 
+        }
+
+        .cancel-btn { 
+            background-color: #444; 
+            color: #fff; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+        }
+
+        .save-btn:active, .cancel-btn:active {
+            opacity: 0.8;
+        }
+        
         /* Print Styles */
         @media print {
             body { background: white; color: black; padding: 0; }
@@ -782,8 +826,8 @@
     <script>
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyX8ubsFSCagEtWhk68tBBLlNK6qN_7ow2qVN0eNcVTo03eYcpi3M_CYkpOMMKABuVz/exec";
         const LOG_DELAY_MS = 20;
-        const GEMINI_API_KEY = ""; // Injected at runtime by platform environment
-        const GEMINI_TEXT_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`;
+        const GEMINI_API_KEY = window.GEMINI_API_KEY || "";
+        const GEMINI_TEXT_URL = GEMINI_API_KEY ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}` : "";
 
         // Helper to safely parse JSON from localStorage with robust error handling
         function getStoredJson(key, defaultVal) {
@@ -834,6 +878,7 @@
 
         let stadiumData = getStoredJson('angels_stadium_config_v11', defaultData);
         let allLogs = getStoredJson('angels_fryer_logs_v11', {});
+        let standNotes = getStoredJson('angels_stand_notes_v1', {});
         
         let defaultTechs = ["Angel", "Manuel", "Carlos", "Moses", "Ernesto B.", "Brian"];
         let technicians = getStoredJson('angels_techs_v11', defaultTechs);
@@ -844,6 +889,10 @@
         document.getElementById('shift-date').value = currentDate;
 
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        function saveStandNotes() {
+            localStorage.setItem('angels_stand_notes_v1', JSON.stringify(standNotes));
+        }
 
         function getCurrentDateState() {
             if (!allLogs[currentDate]) allLogs[currentDate] = { stands: {}, generalComments: "" };
@@ -914,6 +963,10 @@
                 alert("Enter a statement first (e.g. 'Stand 223 filtered 4 dumped 2').");
                 return;
             }
+            if (!GEMINI_API_KEY || !GEMINI_TEXT_URL) {
+                alert("Gemini API key is not configured. Please enter the value manually or add the runtime key before using AI logging.");
+                return;
+            }
 
             const parseBtn = document.getElementById('ai-quick-parse-btn');
             const originalText = parseBtn.innerText;
@@ -930,8 +983,8 @@ Match the stand as accurately as possible to one of the available stand IDs (e.g
 If not specified, leave counts or oil as null. If technician notes "NS" or "not serviced", set isNS to true.`;
 
             const payload = {
-                contents: [{ parts: [{ text: userText }] }],
-                systemInstruction: { parts: [{ text: systemInstruction }] },
+                contents: [{ role: "user", parts: [{ text: userText }] }],
+                system_instruction: { parts: [{ text: systemInstruction }] },
                 generationConfig: {
                     responseMimeType: "application/json",
                     responseSchema: {
@@ -1033,6 +1086,7 @@ If not specified, leave counts or oil as null. If technician notes "NS" or "not 
                 section.stands.forEach(stand => {
                     const standState = dayState[stand.id] || { filter: '', dump: '', oil: '', done: false, isNS: false };
                     const safeId = stand.id.replace(/[^a-zA-Z0-9]/g, '_');
+                    const noteText = standNotes[stand.id] || '';
                     const card = document.createElement('div');
                     card.className = `card ${standState.done ? 'completed' : ''} ${standState.isNS ? 'is-ns' : ''}`;
                     card.id = `card-${safeId}`;
@@ -1046,13 +1100,16 @@ If not specified, leave counts or oil as null. If technician notes "NS" or "not 
                                 <button class="ns-toggle-btn ${standState.isNS ? 'active' : ''}" onclick="toggleNS('${stand.id}')">NS</button>
                                 <span class="stand-title">${stand.id}</span>
                             </div>
-                            <span class="badge ${badgeClass}">${stand.size} lb <span style="color:#888; font-size:9px;">(max ${stand.total})</span></span>
+                            <div class="stand-left">
+                                <button class="note-btn ${noteText ? 'has-note' : ''}" onclick="openNoteModal('${stand.id}')">${noteText ? '💬' : '💬 + Note'}</button>
+                                <span class="badge ${badgeClass}">${stand.size} lb <span style="color:#888; font-size:9px;">(max ${stand.total})</span></span>
+                            </div>
                         </div>
                         <div class="card-row">
                             <span class="info-text">Filtered:</span>
                             <div class="input-group">
                                 <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'filter', -1)">−</button>
-                                <input type="text" inputmode="decimal" pattern="[0-9] id="input-filter-${safeId}" value="${standState.isNS ? 'NS' : standState.filter}" ${standState.isNS ? 'disabled' : ''} placeholder="0" oninput="handleInput('${stand.id}')">
+                                <input type="text" inputmode="decimal" pattern="[0-9]" id="input-filter-${safeId}" value="${standState.isNS ? 'NS' : standState.filter}" ${standState.isNS ? 'disabled' : ''} placeholder="0" oninput="handleInput('${stand.id}')">
                                 <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'filter', 1)">+</button>
                             </div>
                         </div>
@@ -1060,7 +1117,7 @@ If not specified, leave counts or oil as null. If technician notes "NS" or "not 
                             <span class="info-text">Dumped:</span>
                             <div class="input-group">
                                 <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'dump', -1)">−</button>
-                                <input type="text" inputmode="decimal" pattern="[0-9]"id="input-dump-${safeId}" value="${standState.isNS ? 'NS' : standState.dump}" ${standState.isNS ? 'disabled' : ''} placeholder="0" oninput="handleInput('${stand.id}')">
+                                <input type="text" inputmode="decimal" pattern="[0-9]" id="input-dump-${safeId}" value="${standState.isNS ? 'NS' : standState.dump}" ${standState.isNS ? 'disabled' : ''} placeholder="0" oninput="handleInput('${stand.id}')">
                                 <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'dump', 1)">+</button>
                             </div>
                         </div>
@@ -1479,7 +1536,7 @@ If not specified, leave counts or oil as null. If technician notes "NS" or "not 
             const stand = stadiumData[levelIdx].stands[standIdx];
             const newId = prompt("Edit Stand ID:", stand.id);
             if (newId === null) return;
-            const newSizeStr = prompt("Edit Fryer Size (50, 80, or 8):", stand.size);
+            const newSizeStr = prompt("Edit Fryer Size (50, 75, or 80):", stand.size);
             if (newSizeStr === null) return;
             const newTotalStr = prompt("Edit Max Fryer Count:", stand.total);
             if (newTotalStr === null) return;
@@ -1498,10 +1555,45 @@ If not specified, leave counts or oil as null. If technician notes "NS" or "not 
             localStorage.setItem('angels_stadium_config_v11', JSON.stringify(stadiumData));
         }
 
+        function openNoteModal(standName) {
+            currentStandForNote = standName;
+            document.getElementById('modalTitle').innerText = 'Note: ' + standName;
+            document.getElementById('modalTextArea').value = standNotes[standName] || '';
+            document.getElementById('noteModal').style.display = 'flex';
+        }
+
+        function closeNoteModal() {
+            document.getElementById('noteModal').style.display = 'none';
+            currentStandForNote = '';
+        }
+
+        function saveNote() {
+            const text = document.getElementById('modalTextArea').value.trim();
+            if (text) {
+                standNotes[currentStandForNote] = text;
+            } else {
+                delete standNotes[currentStandForNote];
+            }
+            saveStandNotes();
+            render();
+            closeNoteModal();
+        }
+
         // Initialize on load
         document.getElementById('general-comments').value = getCurrentDateState().generalComments || "";
         populateTechDropdown();
         render();
     </script>
+
+    <div id="noteModal" class="modal-overlay">
+      <div class="modal-content">
+        <h3 id="modalTitle" style="color: #84cc16;">Add Note</h3>
+        <textarea id="modalTextArea" placeholder="Type your note here..."></textarea>
+        <div class="modal-actions">
+          <button onclick="closeNoteModal()" class="cancel-btn">Cancel</button>
+          <button onclick="saveNote()" class="save-btn">Save Note</button>
+        </div>
+      </div>
+    </div>
 </body>
 </html>
