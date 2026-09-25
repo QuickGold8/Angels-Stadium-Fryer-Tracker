@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Angels Stadium Fryers</title>
+
+    <!-- iOS Standalone Web App Capabilities -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Filta Tracker">
+
+    <!-- Home Screen Icons -->
+    <link rel="apple-touch-icon" href="angelsfilta3dicon.png">
+    <link rel="icon" href="angelsfilta3dicon.png">
+
+    <!-- Cache Busting -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <!-- Android / Chrome Web App Support -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#121212">
+
+    <style>
+        /* =======================================================
+           EASY EDIT: CSS VARIABLES (Change colors & fonts here)
+           ======================================================= */
+        :root {
+            --app-font-family: -apple-system, BlinkMacSystemFont, Segoe UI, "Roboto", Helvetica, Arial, sans-serif;
+            --bg-body: #121212;
+            --bg-control-bar: #1e1e1e;
+            --bg-dashboard: #1e1e1e;
+            --bg-card: #1e1e1e;
+            --bg-card-completed: #152419;
+            --bg-card-ns: #1a1a1a;
+            --bg-subbox: #262626;
+            --bg-admin: #222222;
+            
+            --text-main: #09700c;
+            --text-muted: #09700c;
+            --text-heading: #09700c;
+            --text-accent-blue: #0479cb;
+            --text-accent-green: #1ba829;
+            --text-accent-lightgreen: #7cbb4e;
+            
+            --border-color: #09700c;
+            --border-completed: #34c759;
+            --border-ns: #ba0021;
+            
+            --accent-blue: #007aff;
+            --accent-green: #34c759;
+            --accent-gold: #ff9500;
+            --accent-red: #ff3b30;
+            --accent-purple: #950fba;
+            
+            --box-radius-md: 8px;
+            --box-radius-sm: 5px;
+        }
+
+        /* Safe area aware base layout */
+        body {
+            font-family: var(--app-font-family);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding-top: max(10px, env(safe-area-inset-top));
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+            padding-left: max(10px, env(safe-area-inset-left));
+            padding-right: max(10px, env(safe-area-inset-right));
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Header Container with Black Icon Box Wrapper */
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+            margin: 4px 0 10px 0;
+            text-align: center;
+        }
+        .header-logo-wrapper {
+            background-color: #000000;
+            padding: 4px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #333333;
+        }
+        .header-logo {
+            height: 22px;
+            max-width: 32px;
+            object-fit: contain;
+            display: block;
+        }
+        h1 {
+            font-size: 21px;
+            margin: 0;
+            color: var(--text-accent-blue);
+            font-weight: 800;
+            letter-spacing: -0.3px;
+        }
+        .sub-header-tag {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-accent-lightgreen);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+        .print-header { display: none; }
+
+        /* Control Bar */
+        .control-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-control-bar);
+            padding: 8px 12px;
+            border-radius: var(--box-radius-md);
+            border: 1px solid var(--border-color);
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .control-bar select, 
+        .control-bar input[type="date"] {
+            background: #2a2a2a;
+            color: #fff;
+            border: 1px solid #12ae00;
+            padding: 5px 8px;
+            border-radius: var(--box-radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            outline: none;
+        }
+        .action-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: var(--box-radius-sm);
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .action-btn:active { opacity: 0.75; }
+        .cloud-btn { background: var(--accent-green); }
+
+        /* Secret Menu Admin Panel */
+        .admin-panel {
+            display: none;
+            background: var(--bg-admin);
+            border: 1px solid var(--accent-green);
+            padding: 12px;
+            border-radius: var(--box-radius-md);
+            margin-bottom: 14px;
+        }
+        .admin-panel.visible { display: block; }
+        .admin-panel h3 {
+            margin: 0 0 8px 0;
+            color: var(--accent-gold);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .admin-form {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .admin-form input, 
+        .admin-form select {
+            background: #181818;
+            color: #12ab00;
+            border: 1px solid #09700c;
+            padding: 5px 8px;
+            border-radius: var(--box-radius-sm);
+            font-size: 12px;
+            flex: 1;
+            min-width: 100px;
+        }
+        .admin-stand-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1c1c1e;
+            padding: 5px 8px;
+            border-radius: var(--box-radius-sm);
+            margin-bottom: 4px;
+            font-size: 12px;
+            border: 1px solid #09700c;
+        }
+        .admin-stand-actions { display: flex; gap: 4px; }
+        .admin-btn-sm {
+            background: #333;
+            color: #fff;
+            border: 1px solid #09700c;
+            padding: 2px 6px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .admin-btn-danger {
+            background: #990000;
+            border-color: #ff3b30;
+        }
+
+        /* Summary Dashboard */
+        .dashboard {
+            background: var(--bg-dashboard);
+            border: 1px solid var(--border-color);
+            border-radius: var(--box-radius-md);
+            padding: 8px 10px;
+            margin-bottom: 12px;
+        }
+        .dashboard-title {
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            text-align: center;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.1fr;
+            gap: 6px;
+        }
+        .stat-category {
+            background: var(--bg-subbox);
+            padding: 6px 8px;
+            border-radius: var(--box-radius-sm);
+            text-align: center;
+        }
+        .stat-cat-title {
+            color: var(--accent-purple);
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        .title-50 { color: var(--accent-gold); }
+        .title-80 { color: #5ac8fa; }
+        .stat-row {
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1px;
+            font-weight: 600;
+        }
+        .oil-total-box {
+            background: var(--bg-subbox);
+            padding: 6px 8px;
+            border-radius: var(--box-radius-sm);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        /* Level Section Headers */
+        .level-header {
+            font-size: 14px;
+            font-weight: 800;
+            margin: 14px 0 6px 0;
+            color: var(--accent-purple);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Compressed Card Layout */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--box-radius-md);
+            padding: 6px 10px;
+            margin-bottom: 6px;
+            transition: border-color 0.15s, background-color 0.15s;
+        }
+        .card.completed {
+            border-left: 5px solid var(--border-completed);
+            background: var(--bg-card-completed);
+        }
+        .card.is-ns {
+            border-left: 5px solid var(--border-ns);
+            background: var(--bg-card-ns);
+            opacity: 0.65;
+        }
+        .card.validation-error {
+            outline: 3px solid var(--accent-red);
+            box-shadow: 0 0 10px rgba(255, 59, 48, 0.5);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+        .stand-left {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .card-checkbox {
+            width: 17px;
+            height: 17px;
+            accent-color: var(--accent-green);
+            cursor: pointer;
+            margin: 0;
+        }
+        .stand-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #7cbb4e;
+            letter-spacing: -0.2px;
+        }
+        .badge {
+            font-size: 11px;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            display: inline-block;
+        }
+        .badge-50 {
+            background: rgba(255, 149, 0, 0.15);
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+        }
+        .badge-80 {
+            background: rgba(90, 200, 250, 0.15);
+            color: #5ac8fa;
+            border: 1px solid #5ac8fa;
+        }
+        .badge-other {
+            background: #2a2a2a;
+            color: #aaa;
+            border: 1px solid #444;
+        }
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3px;
+        }
+        .info-text {
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .stepper-btn {
+            background: #2e2e30;
+            color: #000000;
+            border: 1px solid var(--text-accent-green);
+            width: 28px;
+            height: 26px;
+            border-radius: var(--box-radius-sm);
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            padding: 0;
+        }
+        .stepper-btn:active { background: #444; }
+        .card-row input[type="tel"], 
+        .card-row input[type="text"] {
+            width: 44px;
+            height: 26px;
+            box-sizing: border-box;
+            background: #2a2a2a;
+            color: #ffffff;
+            border: 1px solid var(--text-accent-green);
+            text-align: center;
+            padding: 0 3px;
+            border-radius: var(--box-radius-sm);
+            font-size: 13px;
+            font-weight: 700;
+            outline: none;
+        }
+        .card-row input:focus { border-color: var(--text-accent-lightgreen); }
+        .error-input {
+            border-color: var(--accent-red) !important;
+            background: #2c1616 !important;
+        }
+        
+        .ns-toggle-btn {
+            background: #2a2a2a;
+            color: #888;
+            border: 1px solid var(--text-accent-green);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+        }
+        .ns-toggle-btn.active {
+            background: var(--accent-red);
+            color: white;
+            border-color: var(--accent-red);
+        }
+
+        /* General Comments Block & 3 Action Buttons */
+        .comments-block {
+            margin-top: 15px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--box-radius-md);
+            padding: 10px;
+        }
+        .comments-block h3 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            color: var(--accent-green);
+            text-transform: uppercase;
+        }
+        #general-comments {
+            width: 100%;
+            height: 60px;
+            background: #2a2a2a;
+            color: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 6px;
+            font-size: 12px;
+            font-family: inherit;
+            box-sizing: border-box;
+            resize: vertical;
+            outline: none;
+        }
+        .comment-actions-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .comment-action-btn {
+            flex: 1;
+            min-width: 90px;
+            background: #2a2a2a;
+            color: #fff;
+            border: 1px solid var(--border-color);
+            padding: 8px 10px;
+            border-radius: var(--box-radius-sm);
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .comment-action-btn:active { background: #383838; }
+
+        /* AI Quick Dictate Bar */
+        .ai-quick-bar {
+            background: #18181b;
+            border: 1px solid #09700c;
+            border-radius: var(--box-radius-md);
+            padding: 8px 10px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .ai-quick-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-accent-lightgreen);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .ai-quick-input-group {
+            display: flex;
+            gap: 6px;
+        }
+        .ai-quick-input {
+            flex: 1;
+            background: #27272a;
+            color: #ffffff;
+            border: 1px solid #09700c;
+            border-radius: var(--box-radius-sm);
+            padding: 7px 10px;
+            font-size: 12px;
+            outline: none;
+        }
+        .ai-quick-input:focus { border-color: var(--text-accent-lightgreen); }
+        .ai-quick-chips {
+            display: flex;
+            gap: 5px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+        }
+        .ai-chip {
+            background: #222;
+            color: #a1a1aa;
+            border: 1px solid #09700c;
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .ai-chip:hover { color: #fff; border-color: var(--text-accent-lightgreen); }
+
+        /* Footer with Black App Icon Box */
+        .app-footer {
+            margin-top: 20px;
+            text-align: center;
+            padding: 10px 0;
+            border-top: 1px solid #333;
+        }
+        .footer-logo-wrapper {
+            background-color: #000000;
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 6px;
+            border: 1px solid #333333;
+        }
+        .footer-logo {
+            max-height: 38px;
+            max-width: 140px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+        }
+        .footer-caption {
+            font-size: 4px;
+            color: #09700c;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Modal Overlays */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+        .modal-content {
+            background: var(--bg-control-bar);
+            border: 1px solid var(--border-color);
+            border-radius: var(--box-radius-md);
+            padding: 20px;
+            width: 80%;
+            max-width: 320px;
+            text-align: center;
+        }
+        .modal-content h3 { margin: 0 0 10px 0; color: #fff; font-size: 16px; }
+        .modal-content p { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
+        .modal-actions { display: flex; gap: 10px; justify-content: center; }
+        .btn-cancel {
+            background: #333; color: #fff; border: none;
+            padding: 10px 15px; border-radius: var(--box-radius-sm);
+            font-weight: bold; cursor: pointer; flex: 1;
+        }
+        .btn-confirm {
+            background: var(--accent-green); color: #fff; border: none;
+            padding: 10px 15px; border-radius: var(--box-radius-sm);
+            font-weight: bold; cursor: pointer; flex: 1;
+        }
+        .ai-spinner {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Print Styles */
+        @media print {
+            body { background: white; color: black; padding: 0; }
+            .control-bar, .admin-panel, .dashboard, .action-btn, .stepper-btn, .ns-toggle-btn, input[type="checkbox"], .app-footer, .ai-quick-bar, .comment-actions-row { display: none !important; }
+            h1 { color: black; font-size: 18px; text-align: left; }
+            .sub-header-tag { color: black; }
+            .card { border: 1px solid #ccc; background: white !important; break-inside: avoid; margin-bottom: 6px; padding: 8px; }
+            .stand-title, .level-header { color: black !important; }
+            .badge { border: 1px solid #000; color: black !important; background: none !important; }
+            .print-header { display: block; font-size: 14px; font-weight: bold; margin-bottom: 10px; }
+            .card-row input { border: none; background: transparent; color: black; padding: 0; text-align: right; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="print-header" id="print-date-label"></div>
+
+    <div class="header-container" onclick="handleTitleClick()">
+        <div class="header-logo-wrapper">
+            <img src="angelslogo.png" class="header-logo" alt="Logo" onerror="this.src='angelslogo.png'; this.onerror=null;">
+        </div>
+        <div>
+            <h1>Angel's Stadium</h1>
+            <span class="sub-header-tag">Service Tracker</span>
+        </div>
+    </div>
+
+    <!-- Top Control Bar -->
+    <div class="control-bar">
+        <div class="control-group">
+            <label for="technician-select">👤Tech:</label>
+            <select id="technician-select" onchange="changeTech(this.value)"></select>
+        </div>
+        <div class="control-group">
+            <label for="shift-date">📅 Date:</label>
+            <input type="date" id="shift-date" onchange="changeDate(this.value)">
+        </div>
+        <div class="control-group">
+            <button class="action-btn" onclick="printReport()">🖨️ Print</button>
+            <button class="action-btn cloud-btn" onclick="validateBeforeSubmit()">☁️ Submit</button>
+        </div>
+    </div>
+
+    <!-- AI Smart Dictate & Apply Bar -->
+    <div class="ai-quick-bar">
+        <div class="ai-quick-header">
+            <span>🎙️ AI Smart Dictate & Logger</span>
+            <span id="ai-quick-status" style="font-size: 10px; color: var(--text-muted);">gemini-3-flash</span>
+        </div>
+        <div class="ai-quick-input-group">
+            <input type="text" 
+                   id="ai-quick-text" 
+                   class="ai-quick-input" 
+                   placeholder="Say or type: e.g. 'Stand 223 filtered 4 dumped 2 used 3 gal'"
+                   onkeydown="if(event.key==='Enter') executeAiQuickLog()">
+            <button class="action-btn" style="background:#2a2a2a; border: 1px solid #444;" onclick="startDictation()" title="Dictate Speech">🎙️</button>
+            <button class="action-btn" id="ai-quick-parse-btn" style="background: var(--text-accent-lightgreen); color:#121212;" onclick="executeAiQuickLog()">Apply</button>
+        </div>
+        <div class="ai-quick-chips">
+            <span class="ai-chip" onclick="fillQuickChip('Stand #223 filtered 4 dumped 2 used 3 gal')">#223: 4 filter, 2 dump</span>
+            <span class="ai-chip" onclick="fillQuickChip('Main Kitchen dumped 3 used 4.5 gal oil')">Main Kitchen: 3 dump, 4.5 gal</span>
+            <span class="ai-chip" onclick="fillQuickChip('Pacifico 207 not serviced fryers were dirty')">Pacifico 207: NS Note</span>
+            <span class="ai-chip" onclick="fillQuickChip('Stand 130 filtered 6 used 0 oil done')">#130: 6 filter done</span>
+        </div>
+    </div>
+
+    <!-- Hidden Admin Panel (Login-Guarded) -->
+    <div class="admin-panel" id="admin-panel">
+        <h3>Secret Menu: Configuration & Executive Suite</h3>
+        <div id="admin-login-box">
+            <div style="font-size: 11px; color: #aaa; margin-bottom: 6px;">Enter admin password to unlock management suite:</div>
+            <div class="admin-form">
+                <input type="password" id="admin-secret-pass" placeholder="Password (default: filta2026)">
+                <button class="action-btn" onclick="verifyAdminLogin()">Unlock</button>
+            </div>
+        </div>
+        <div id="admin-tools-box" style="display: none;">
+            <!-- Level Editor -->
+            <div class="admin-form">
+                <input type="text" id="new-level-name" placeholder="New Level Name">
+                <button class="action-btn" onclick="addLevel()">Add Level</button>
+            </div>
+            <div class="admin-form">
+                <select id="select-level" onchange="populateAdminStandsList()"></select>
+            </div>
+            
+            <!-- Stand Editor -->
+            <div class="admin-form">
+                <input type="text" id="new-stand-id" placeholder="Stand ID">
+                <select id="new-stand-size">
+                    <option value="50">50 lb</option>
+                    <option value="80">80 lb</option>
+                    <option value="75">75 lb</option>
+                </select>
+                <input type="number" id="new-stand-total" placeholder="Max" min="1" style="max-width: 60px;">
+                <button class="action-btn" onclick="addStand()">Add Stand</button>
+            </div>
+            <div id="admin-stands-container" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px;"></div>
+
+            <!-- Technician Editor -->
+            <hr style="border-color: #444; margin-top: 15px;">
+            <h3>Manage Technicians</h3>
+            <div class="admin-form">
+                <input type="text" id="new-tech-name" placeholder="Technician Name">
+                <button class="action-btn" onclick="addTech()">Add Tech</button>
+            </div>
+            <div id="admin-tech-container" style="max-height: 150px; overflow-y: auto; margin-bottom: 12px;"></div>
+            <button class="admin-btn-sm admin-btn-danger" onclick="lockAdminSuite()">Lock Secret Menu</button>
+        </div>
+    </div>
+
+    <!-- Summary Dashboard -->
+    <div class="dashboard">
+        <div class="dashboard-title">Shift Subtotals</div>
+        <div class="stats-grid">
+            <div class="stat-category">
+                <div class="stat-cat-title title-50">50 lb Fryers</div>
+                <div class="stat-row"><span>Filtered:</span> <span id="f50-val">0</span></div>
+                <div class="stat-row"><span>Changed:</span> <span id="d50-val">0</span></div>
+            </div>
+            <div class="stat-category">
+                <div class="stat-cat-title title-80">80 lb Fryers</div>
+                <div class="stat-row"><span>Filtered:</span> <span id="f80-val">0</span></div>
+                <div class="stat-row"><span>Changed:</span> <span id="d80-val">0</span></div>
+            </div>
+            <div class="oil-total-box">
+                <div>TOTAL OIL</div>
+                <div style="font-size: 18px; margin-top: 2px;"><span id="total-oil-val">0</span> <span style="font-size: 10px;">gal</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <div id="app"></div>
+
+    <!-- General Comments Section with 3 Action Buttons -->
+    <div class="comments-block">
+        <h3>Comments & Notes</h3>
+        <textarea id="general-comments" placeholder="Enter any comments here..." oninput="saveComments()"></textarea>
+        <div class="comment-actions-row">
+            <button class="comment-action-btn" onclick="printReport()">📄 Print Preview</button>
+            <button class="comment-action-btn" style="background: var(--accent-green);" onclick="validateBeforeSubmit()">☁️ Review & Submit</button>
+            <button class="comment-action-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">⬆️ Scroll to Top</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="footer-logo-wrapper">
+            <img src="filtaoclogo.png" alt="Filta Logo" class="footer-logo" onerror="this.src='filtaoclogo.png'; this.onerror=null;">
+        </div>
+        <span class="footer-caption">Filta™& FiltaOC®</span>
+    </footer>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Confirm Submission</h3>
+            <p>Are you sure your logs are correct and accurate?</p>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">Go Back</button>
+                <button id="modal-submit-btn" class="btn-confirm" onclick="executeCloudSubmit()">SUBMIT</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyX8ubsFSCagEtWhk68tBBLlNK6qN_7ow2qVN0eNcVTo03eYcpi3M_CYkpOMMKABuVz/exec";
+        const LOG_DELAY_MS = 20;
+        const GEMINI_API_KEY = ""; // Injected at runtime by platform environment
+        const GEMINI_TEXT_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`;
+
+        // Helper to safely parse JSON from localStorage with robust error handling
+        function getStoredJson(key, defaultVal) {
+            try {
+                const stored = localStorage.getItem(key);
+                if (!stored || stored === "undefined" || stored === "null" || !stored.trim()) {
+                    return defaultVal;
+                }
+                return JSON.parse(stored) || defaultVal;
+            } catch (e) {
+                console.warn(`Resetting corrupted localStorage for ${key}`);
+                return defaultVal;
+            }
+        }
+
+        const defaultData = [
+            { level: "View Level", stands: [
+                { id: "#411", size: 50, total: 4 },
+                { id: "#425", size: 50, total: 4 }
+            ]},
+            { level: "Club Level", stands: [
+                { id: "#344", size: 50, total: 2 },
+                { id: "#334", size: 50, total: 3 },
+                { id: "1st Base", size: 80, total: 4 },
+                { id: "#317", size: 50, total: 3 },
+                { id: "3rd Base", size: 80, total: 4 },
+                { id: "Brewery X", size: 50, total: 1 },
+                { id: "Brewery X (Alt)", size: 80, total: 2 }
+            ]},
+            { level: "Terrace Level", stands: [
+                { id: "#226", size: 80, total: 3 },
+                { id: "#223", size: 50, total: 6 },
+                { id: "#207", size: 50, total: 4 },
+                { id: "#207", size: 80, total: 2 },
+                { id: "#260", size: 80, total: 3 },
+                { id: "#255", size: 50, total: 4 }
+            ]},
+            { level: "Field Level", stands: [
+                { id: "#130", size: 50, total: 6 },
+                { id: "#109", size: 50, total: 1 },
+                { id: "#106", size: 80, total: 4 },
+                { id: "Main Kitchen", size: 80, total: 3 },
+                { id: "Commissary", size: 80, total: 1 },
+                { id: "DC Restaurant", size: 80, total: 4 },
+                { id: "DC Inseat", size: 80, total: 3 }
+            ]}
+        ];
+
+        let stadiumData = getStoredJson('angels_stadium_config_v11', defaultData);
+        let allLogs = getStoredJson('angels_fryer_logs_v11', {});
+        
+        let defaultTechs = ["Angel", "Manuel", "Carlos", "Moses", "Ernesto B.", "Brian"];
+        let technicians = getStoredJson('angels_techs_v11', defaultTechs);
+        let currentTech = technicians[0] || "";
+        let adminCredentials = getStoredJson('angels_admin_creds_v1', { pass: "filta2026" });
+
+        let currentDate = new Date().toLocaleDateString('en-CA');
+        document.getElementById('shift-date').value = currentDate;
+
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        function getCurrentDateState() {
+            if (!allLogs[currentDate]) allLogs[currentDate] = { stands: {}, generalComments: "" };
+            return allLogs[currentDate];
+        }
+
+        function changeDate(newDateStr) {
+            if (!newDateStr) return;
+            currentDate = newDateStr;
+            document.getElementById('general-comments').value = getCurrentDateState().generalComments || "";
+            render();
+        }
+
+        function saveComments() {
+            let dayState = getCurrentDateState();
+            dayState.generalComments = document.getElementById('general-comments').value;
+            saveLogs();
+        }
+
+        /* --- Gemini 3 AI Apply Logger --- */
+        function fillQuickChip(text) {
+            const input = document.getElementById('ai-quick-text');
+            input.value = text;
+            input.focus();
+        }
+
+        function startDictation() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert("Speech recognition not supported in this browser. Please type your update.");
+                return;
+            }
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            const statusEl = document.getElementById('ai-quick-status');
+            statusEl.innerText = "Listening...";
+            statusEl.style.color = "var(--accent-red)";
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('ai-quick-text').value = transcript;
+                statusEl.innerText = "gemini-3-flash";
+                statusEl.style.color = "var(--text-muted)";
+                executeAiQuickLog();
+            };
+
+            recognition.onerror = () => {
+                statusEl.innerText = "gemini-3-flash";
+                statusEl.style.color = "var(--text-muted)";
+                alert("Could not recognize voice. Please type your log.");
+            };
+
+            recognition.onend = () => {
+                statusEl.innerText = "gemini-3-flash";
+                statusEl.style.color = "var(--text-muted)";
+            };
+
+            recognition.start();
+        }
+
+        async function executeAiQuickLog() {
+            const textInput = document.getElementById('ai-quick-text');
+            const userText = textInput.value.trim();
+            if (!userText) {
+                alert("Enter a statement first (e.g. 'Stand 223 filtered 4 dumped 2').");
+                return;
+            }
+
+            const parseBtn = document.getElementById('ai-quick-parse-btn');
+            const originalText = parseBtn.innerText;
+            parseBtn.innerHTML = `<span class="ai-spinner"></span>`;
+            parseBtn.disabled = true;
+
+            const allAvailableStands = [];
+            stadiumData.forEach(s => s.stands.forEach(st => allAvailableStands.push(st.id)));
+
+            const systemInstruction = `You are an AI assistant for Angels Stadium Fryer Service.
+Extract stand log updates from technicians' voice or typed notes into structured JSON.
+Available stands in stadium: ${JSON.stringify(allAvailableStands)}.
+Match the stand as accurately as possible to one of the available stand IDs (e.g. "223" -> "#223", "Pacifico" -> "Pacifico 207 (Front)").
+If not specified, leave counts or oil as null. If technician notes "NS" or "not serviced", set isNS to true.`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userText }] }],
+                systemInstruction: { parts: [{ text: systemInstruction }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            matchedStandId: { type: "STRING", description: "Exact stand ID from available list" },
+                            filterCount: { type: "INTEGER", nullable: true },
+                            dumpCount: { type: "INTEGER", nullable: true },
+                            oilUsed: { type: "NUMBER", nullable: true },
+                            isNS: { type: "BOOLEAN" },
+                            comments: { type: "STRING", nullable: true }
+                        },
+                        required: ["matchedStandId", "isNS"]
+                    }
+                }
+            };
+
+            try {
+                const response = await fetch(GEMINI_TEXT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) throw new Error("AI request failed");
+                const result = await response.json();
+                const jsonText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (!jsonText) throw new Error("No response data received.");
+                const parsed = JSON.parse(jsonText);
+
+                let matchedStand = null;
+                for (let sec of stadiumData) {
+                    for (let s of sec.stands) {
+                        if (s.id === parsed.matchedStandId) {
+                            matchedStand = s;
+                            break;
+                        }
+                    }
+                    if (matchedStand) break;
+                }
+
+                if (!matchedStand) {
+                    alert(`Could not match "${userText}" to a stadium stand.`);
+                    return;
+                }
+
+                let dayState = getCurrentDateState().stands;
+                if (!dayState[matchedStand.id]) {
+                    dayState[matchedStand.id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
+                }
+
+                if (parsed.isNS) {
+                    dayState[matchedStand.id].isNS = true;
+                    dayState[matchedStand.id].filter = 'NS';
+                    dayState[matchedStand.id].dump = 'NS';
+                } else {
+                    dayState[matchedStand.id].isNS = false;
+                    if (parsed.filterCount !== null && parsed.filterCount !== undefined) {
+                        dayState[matchedStand.id].filter = String(parsed.filterCount);
+                    }
+                    if (parsed.dumpCount !== null && parsed.dumpCount !== undefined) {
+                        dayState[matchedStand.id].dump = String(parsed.dumpCount);
+                    }
+                }
+
+                if (parsed.oilUsed !== null && parsed.oilUsed !== undefined) {
+                    dayState[matchedStand.id].oil = String(parsed.oilUsed);
+                }
+                if (parsed.comments) {
+                    const currentGeneral = getCurrentDateState().generalComments || '';
+                    getCurrentDateState().generalComments = currentGeneral ? `${currentGeneral} | [${matchedStand.id}]: ${parsed.comments}` : `[${matchedStand.id}]: ${parsed.comments}`;
+                    document.getElementById('general-comments').value = getCurrentDateState().generalComments;
+                }
+                dayState[matchedStand.id].done = true;
+
+                saveLogs();
+                render();
+                textInput.value = '';
+            } catch (err) {
+                console.error("AI Quick Log Error:", err);
+                alert("AI couldn't parse statement. Try typing manually or check connection.");
+            } finally {
+                parseBtn.innerHTML = originalText;
+                parseBtn.disabled = false;
+            }
+        }
+
+        /* --- UI Rendering & Event Handlers --- */
+        function render() {
+            const app = document.getElementById('app');
+            app.innerHTML = '';
+            const dayState = getCurrentDateState().stands;
+
+            stadiumData.forEach(section => {
+                const levelDiv = document.createElement('div');
+                levelDiv.className = 'level-header';
+                levelDiv.innerText = section.level;
+                app.appendChild(levelDiv);
+
+                section.stands.forEach(stand => {
+                    const standState = dayState[stand.id] || { filter: '', dump: '', oil: '', done: false, isNS: false };
+                    const safeId = stand.id.replace(/[^a-zA-Z0-9]/g, '_');
+                    const card = document.createElement('div');
+                    card.className = `card ${standState.done ? 'completed' : ''} ${standState.isNS ? 'is-ns' : ''}`;
+                    card.id = `card-${safeId}`;
+
+                    let badgeClass = stand.size === 50 ? 'badge-50' : (stand.size === 80 ? 'badge-80' : 'badge-other');
+
+                    card.innerHTML = `
+                        <div class="card-top">
+                            <div class="stand-left">
+                                <input type="checkbox" class="card-checkbox" ${standState.done ? 'checked' : ''} onchange="toggleDone('${stand.id}', this.checked)">
+                                <button class="ns-toggle-btn ${standState.isNS ? 'active' : ''}" onclick="toggleNS('${stand.id}')">NS</button>
+                                <span class="stand-title">${stand.id}</span>
+                            </div>
+                            <span class="badge ${badgeClass}">${stand.size} lb <span style="color:#888; font-size:9px;">(max ${stand.total})</span></span>
+                        </div>
+                        <div class="card-row">
+                            <span class="info-text">Filtered:</span>
+                            <div class="input-group">
+                                <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'filter', -1)">−</button>
+                                <input type="text" inputmode="decimal" pattern="[0-9] id="input-filter-${safeId}" value="${standState.isNS ? 'NS' : standState.filter}" ${standState.isNS ? 'disabled' : ''} placeholder="0" oninput="handleInput('${stand.id}')">
+                                <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'filter', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="card-row">
+                            <span class="info-text">Dumped:</span>
+                            <div class="input-group">
+                                <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'dump', -1)">−</button>
+                                <input type="text" inputmode="decimal" pattern="[0-9]"id="input-dump-${safeId}" value="${standState.isNS ? 'NS' : standState.dump}" ${standState.isNS ? 'disabled' : ''} placeholder="0" oninput="handleInput('${stand.id}')">
+                                <button class="stepper-btn" onclick="adjustCount('${stand.id}', 'dump', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="card-row">
+                            <span class="info-text">Oil Used (gal):</span>
+                            <input type="text" inputmode="decimal" id="input-oil-${safeId}" value="${standState.oil}" placeholder="Gal" oninput="handleOil('${stand.id}', this.value)">
+                        </div>
+                    `;
+                    app.appendChild(card);
+                });
+            });
+            updateTotals();
+        }
+
+        function toggleDone(id, val) {
+            let dayState = getCurrentDateState().stands;
+            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
+            dayState[id].done = val;
+            saveLogs();
+            render();
+        }
+
+        function toggleNS(id) {
+            let dayState = getCurrentDateState().stands;
+            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
+            dayState[id].isNS = !dayState[id].isNS;
+            dayState[id].filter = dayState[id].isNS ? 'NS' : '';
+            dayState[id].dump = dayState[id].isNS ? 'NS' : '';
+            saveLogs();
+            render();
+        }
+
+        function adjustCount(id, field, delta) {
+            let dayState = getCurrentDateState().stands;
+            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
+            if (dayState[id].isNS) return;
+            
+            const safeId = id.replace(/[^a-zA-Z0-9]/g, '_');
+            document.getElementById(`card-${safeId}`)?.classList.remove('validation-error');
+            document.getElementById(`input-filter-${safeId}`)?.classList.remove('error-input');
+            document.getElementById(`input-dump-${safeId}`)?.classList.remove('error-input');
+
+            let cur = parseInt(dayState[id][field]) || 0;
+            let next = cur + delta;
+            if (next < 0) next = 0;
+            dayState[id][field] = next === 0 ? '' : String(next);
+            saveLogs();
+            render();
+        }
+
+        function handleInput(id) {
+            const safeId = id.replace(/[^a-zA-Z0-9]/g, '_');
+            let dayState = getCurrentDateState().stands;
+            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
+            
+            dayState[id].filter = document.getElementById(`input-filter-${safeId}`).value;
+            dayState[id].dump = document.getElementById(`input-dump-${safeId}`).value;
+            
+            document.getElementById(`card-${safeId}`)?.classList.remove('validation-error');
+            document.getElementById(`input-filter-${safeId}`)?.classList.remove('error-input');
+            document.getElementById(`input-dump-${safeId}`)?.classList.remove('error-input');
+
+            saveLogs();
+            updateTotals();
+        }
+
+        function handleOil(id, val) {
+            let dayState = getCurrentDateState().stands;
+            if (!dayState[id]) dayState[id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
+            dayState[id].oil = val;
+            saveLogs();
+            updateTotals();
+        }
+
+        function saveLogs() {
+            localStorage.setItem('angels_fryer_logs_v11', JSON.stringify(allLogs));
+        }
+
+        function updateTotals() {
+            let f50 = 0, d50 = 0, f80 = 0, d80 = 0, totalOil = 0;
+            let dayState = getCurrentDateState().stands;
+            stadiumData.forEach(section => {
+                section.stands.forEach(stand => {
+                    let obj = dayState[stand.id];
+                    if (!obj) return;
+                    if (!obj.isNS) {
+                        let f = parseInt(obj.filter) || 0;
+                        let d = parseInt(obj.dump) || 0;
+                        if (stand.size === 50) { f50 += f; d50 += d; }
+                        if (stand.size === 80) { f80 += f; d80 += d; }
+                    }
+                    let oil = parseFloat(obj.oil) || 0;
+                    totalOil += oil;
+                });
+            });
+            document.getElementById('f50-val').innerText = f50;
+            document.getElementById('d50-val').innerText = d50;
+            document.getElementById('f80-val').innerText = f80;
+            document.getElementById('d80-val').innerText = d80;
+            document.getElementById('total-oil-val').innerText = totalOil.toFixed(1);
+        }
+
+        function printReport() {
+            document.getElementById('print-date-label').innerText = `Date: ${currentDate} | Tech: ${currentTech}`;
+            window.print();
+        }
+
+        /* --- Cloud Submission & Validation --- */
+        const parseNum = (val) => parseInt(val) || 0;
+
+        function validateBeforeSubmit() {
+            const dayState = getCurrentDateState().stands;
+            let validationFailed = false;
+
+            for (let section of stadiumData) {
+                for (let stand of section.stands) {
+                    const stObj = dayState[stand.id] || { filter: '', dump: '', isNS: false };
+                    if (stObj.isNS) continue;
+
+                    const filterCount = parseNum(stObj.filter);
+                    const dumpCount = parseNum(stObj.dump);
+                    const totalServices = filterCount + dumpCount;
+
+                    if (totalServices > stand.total) {
+                        validationFailed = true;
+                        const safeId = stand.id.replace(/[^a-zA-Z0-9]/g, '_');
+                        
+                        const cardEl = document.getElementById(`card-${safeId}`);
+                        const filterInput = document.getElementById(`input-filter-${safeId}`);
+                        const dumpInput = document.getElementById(`input-dump-${safeId}`);
+                        
+                        if (cardEl) {
+                            cardEl.classList.add('validation-error');
+                            cardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                        if (filterInput) filterInput.classList.add('error-input');
+                        if (dumpInput) dumpInput.classList.add('error-input');
+
+                        alert(`ERROR: ${stand.id} has a maximum of ${stand.total} fryers.\nYou entered ${totalServices} total services (${filterCount} filtered + ${dumpCount} dumped).\n\nPlease correct this before submitting.`);
+                        return;
+                    }
+                }
+            }
+
+            if (!validationFailed) {
+                document.getElementById('confirm-modal').style.display = 'flex';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('confirm-modal').style.display = 'none';
+        }
+
+        async function executeCloudSubmit() {
+            const btn = document.getElementById('modal-submit-btn');
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            const dayState = getCurrentDateState().stands;
+            const globalComments = getCurrentDateState().generalComments || `Shift Date: ${currentDate}`;
+            let queue = [];
+
+            stadiumData.forEach(section => {
+                section.stands.forEach(stand => {
+                    const stObj = dayState[stand.id] || { filter: '', dump: '', oil: '', isNS: false };
+                    const isNS = !!stObj.isNS;
+                    const filterCount = parseNum(stObj.filter);
+                    const dumpCount = parseNum(stObj.dump);
+                    const oilAmount = parseFloat(stObj.oil) || 0;
+
+                    const isServiced = !isNS && (filterCount > 0 || dumpCount > 0);
+                    const hasOilSold = oilAmount > 0;
+
+                    if (!isServiced && !hasOilSold) return;
+
+                    let lvlField = "", lvlTerrace = "", lvlClub = "", lvlView = "";
+                    const normLevel = section.level.toLowerCase();
+                    if (normLevel.includes("field")) lvlField = stand.id;
+                    else if (normLevel.includes("terrace")) lvlTerrace = stand.id;
+                    else if (normLevel.includes("club")) lvlClub = stand.id;
+                    else if (normLevel.includes("view")) lvlView = stand.id;
+                    else lvlField = stand.id;
+
+                    let payload = {
+                        technician: currentTech || "Unknown",
+                        fieldLevel: lvlField,
+                        terraceLevel: lvlTerrace,
+                        clubLevel: lvlClub,
+                        viewLevel: lvlView,
+                        comments: globalComments,
+                        f50Count: (isServiced && stand.size === 50) ? filterCount : "",
+                        d50Count: (isServiced && stand.size === 50) ? dumpCount : "",
+                        f80Count: (isServiced && stand.size === 80) ? filterCount : "",
+                        d80Count: (isServiced && stand.size === 80) ? dumpCount : "",
+                        oilUsed: hasOilSold ? oilAmount : ""
+                    };
+
+                    queue.push(payload);
+                });
+            });
+
+            if (queue.length === 0) {
+                alert("No completed services or oil sales found to log.");
+                closeModal();
+                btn.innerText = "SUBMIT";
+                btn.disabled = false;
+                return;
+            }
+
+            let successCount = 0;
+            for (let i = 0; i < queue.length; i++) {
+                btn.innerText = `Logging ${i + 1} / ${queue.length}...`;
+                try {
+                    await fetch(WEB_APP_URL, {
+                        method: "POST",
+                        mode: "no-cors",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(queue[i])
+                    });
+                    successCount++;
+                    await sleep(LOG_DELAY_MS);
+                } catch (err) {
+                    console.error("Submission failed for row:", queue[i], err);
+                }
+            }
+
+            alert(`Successfully synced ${successCount} records to Google Sheets!`);
+            closeModal();
+            btn.innerText = "SUBMIT";
+            btn.disabled = false;
+        }
+
+        /* --- Secret Menu & Authentication --- */
+        let titleClickCount = 0;
+        let titleClickTimer = null;
+        function handleTitleClick() {
+            titleClickCount++;
+            clearTimeout(titleClickTimer);
+            if (titleClickCount >= 5) {
+                document.getElementById('admin-panel').classList.toggle('visible');
+                titleClickCount = 0;
+            } else {
+                titleClickTimer = setTimeout(() => { titleClickCount = 0; }, 3000);
+            }
+        }
+
+        function verifyAdminLogin() {
+            const passInput = document.getElementById('admin-secret-pass').value.trim();
+            if (passInput === adminCredentials.pass) {
+                document.getElementById('admin-secret-pass').value = '';
+                document.getElementById('admin-login-box').style.display = 'none';
+                document.getElementById('admin-tools-box').style.display = 'block';
+                updateAdminLevelSelect();
+                populateAdminTechList();
+            } else {
+                alert("Incorrect admin password.");
+            }
+        }
+
+        function lockAdminSuite() {
+            document.getElementById('admin-tools-box').style.display = 'none';
+            document.getElementById('admin-login-box').style.display = 'block';
+            document.getElementById('admin-panel').classList.remove('visible');
+        }
+
+        function populateTechDropdown() {
+            const select = document.getElementById('technician-select');
+            select.innerHTML = '';
+            technicians.forEach(tech => {
+                let opt = document.createElement('option');
+                opt.value = tech;
+                opt.innerText = tech;
+                select.appendChild(opt);
+            });
+            select.value = currentTech;
+        }
+
+        function populateAdminTechList() {
+            const container = document.getElementById('admin-tech-container');
+            container.innerHTML = '';
+            if (technicians.length === 0) {
+                container.innerHTML = '<div style="color: #aaa; font-size: 12px; font-style: italic;">No technicians added.</div>';
+                return;
+            }
+            technicians.forEach((tech, idx) => {
+                const item = document.createElement('div');
+                item.className = 'admin-stand-list-item';
+                item.innerHTML = `
+                    <span><b>${tech}</b></span>
+                    <div class="admin-stand-actions">
+                        <button class="admin-btn-sm" onclick="editTechPrompt(${idx})">Edit</button>
+                        <button class="admin-btn-sm admin-btn-danger" onclick="deleteTech(${idx})">✕</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function addTech() {
+            const name = document.getElementById('new-tech-name').value.trim();
+            if (!name) return;
+            technicians.push(name);
+            saveTechs();
+            document.getElementById('new-tech-name').value = '';
+            populateAdminTechList();
+            populateTechDropdown();
+        }
+
+        function editTechPrompt(idx) {
+            const newName = prompt("Edit Technician Name:", technicians[idx]);
+            if (newName === null || !newName.trim()) return;
+            technicians[idx] = newName.trim();
+            saveTechs();
+            populateAdminTechList();
+            populateTechDropdown();
+            if (currentTech === technicians[idx]) changeTech(technicians[idx]);
+        }
+
+        function deleteTech(idx) {
+            if (!confirm(`Delete technician ${technicians[idx]}?`)) return;
+            technicians.splice(idx, 1);
+            saveTechs();
+            populateAdminTechList();
+            populateTechDropdown();
+        }
+
+        function saveTechs() {
+            localStorage.setItem('angels_techs_v11', JSON.stringify(technicians));
+        }
+
+        function changeTech(newTech) {
+            currentTech = newTech;
+        }
+
+        function updateAdminLevelSelect() {
+            const select = document.getElementById('select-level');
+            const currentSelected = select.value;
+            select.innerHTML = '';
+            stadiumData.forEach((sec, idx) => {
+                let opt = document.createElement('option');
+                opt.value = idx;
+                opt.innerText = sec.level;
+                select.appendChild(opt);
+            });
+            if (currentSelected !== "" && currentSelected < stadiumData.length) select.value = currentSelected;
+            populateAdminStandsList();
+        }
+
+        function populateAdminStandsList() {
+            const levelIdx = document.getElementById('select-level').value;
+            const container = document.getElementById('admin-stands-container');
+            container.innerHTML = '';
+            if (levelIdx === "" || !stadiumData[levelIdx]) return;
+            const stands = stadiumData[levelIdx].stands;
+            stands.forEach((stand, standIdx) => {
+                const item = document.createElement('div');
+                item.className = 'admin-stand-list-item';
+                item.innerHTML = `
+                    <span><b>${stand.id}</b> (${stand.size}lb, max ${stand.total})</span>
+                    <div class="admin-stand-actions">
+                        <button class="admin-btn-sm" ${standIdx === 0 ? 'disabled style="opacity:0.3"' : ''} onclick="moveStand(${levelIdx}, ${standIdx}, -1)">▲</button>
+                        <button class="admin-btn-sm" ${standIdx === stands.length - 1 ? 'disabled style="opacity:0.3"' : ''} onclick="moveStand(${levelIdx}, ${standIdx}, 1)">▼</button>
+                        <button class="admin-btn-sm" onclick="editStandPrompt(${levelIdx}, ${standIdx})">Edit</button>
+                        <button class="admin-btn-sm admin-btn-danger" onclick="deleteStandFromAdmin(${levelIdx}, '${stand.id}')">✕</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function addLevel() {
+            const name = document.getElementById('new-level-name').value.trim();
+            if (!name) return;
+            stadiumData.push({ level: name, stands: [] });
+            saveConfig();
+            document.getElementById('new-level-name').value = '';
+            updateAdminLevelSelect();
+            render();
+        }
+
+        function addStand() {
+            const levelIdx = document.getElementById('select-level').value;
+            const id = document.getElementById('new-stand-id').value.trim();
+            const size = parseInt(document.getElementById('new-stand-size').value, 10);
+            const total = parseInt(document.getElementById('new-stand-total').value, 10);
+            if (!id || isNaN(total) || total < 1) return;
+            stadiumData[levelIdx].stands.push({ id, size, total });
+            saveConfig();
+            document.getElementById('new-stand-id').value = '';
+            document.getElementById('new-stand-total').value = '';
+            populateAdminStandsList();
+            render();
+        }
+
+        function deleteStandFromAdmin(levelIdx, standId) {
+            if (!confirm(`Delete stand ${standId}?`)) return;
+            stadiumData[levelIdx].stands = stadiumData[levelIdx].stands.filter(s => s.id !== standId);
+            saveConfig();
+            populateAdminStandsList();
+            render();
+        }
+
+        function moveStand(levelIdx, standIdx, direction) {
+            const stands = stadiumData[levelIdx].stands;
+            const targetIdx = standIdx + direction;
+            if (targetIdx < 0 || targetIdx >= stands.length) return;
+            const temp = stands[standIdx];
+            stands[standIdx] = stands[targetIdx];
+            stands[targetIdx] = temp;
+            saveConfig();
+            populateAdminStandsList();
+            render();
+        }
+
+        function editStandPrompt(levelIdx, standIdx) {
+            const stand = stadiumData[levelIdx].stands[standIdx];
+            const newId = prompt("Edit Stand ID:", stand.id);
+            if (newId === null) return;
+            const newSizeStr = prompt("Edit Fryer Size (50, 80, or 8):", stand.size);
+            if (newSizeStr === null) return;
+            const newTotalStr = prompt("Edit Max Fryer Count:", stand.total);
+            if (newTotalStr === null) return;
+            const size = parseInt(newSizeStr, 10);
+            const total = parseInt(newTotalStr, 10);
+            if (!newId.trim() || isNaN(size) || isNaN(total) || total < 1) return;
+            stand.id = newId.trim();
+            stand.size = size;
+            stand.total = total;
+            saveConfig();
+            populateAdminStandsList();
+            render();
+        }
+
+        function saveConfig() {
+            localStorage.setItem('angels_stadium_config_v11', JSON.stringify(stadiumData));
+        }
+
+        // Initialize on load
+        document.getElementById('general-comments').value = getCurrentDateState().generalComments || "";
+        populateTechDropdown();
+        render();
+    </script>
+</body>
+</html>
