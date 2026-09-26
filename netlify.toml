@@ -6,3 +6,6 @@
   from = "/*"
   to = "/Index.html"
   status = 200
+
+[build]
+  command = "node build.js"
