@@ -12,12 +12,13 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install Gemini CLI
         run: npm install -g @google/gemini-cli
 
-      - name: Analyze PR
-        run: gemini "Review the code changes in this PR and point out potential bugs or improvements."
+      - name: Analyze Code
+        run: gemini --yolo --skip-trust -p "Review the changes in this repository and suggest any improvements for HTML or JavaScript files."
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_CLI_TRUST_WORKSPACE: "true"
