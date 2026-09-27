@@ -1,0 +1,14 @@
+[build]
+  base = ""
+  publish = "."
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/Index.html"
+  to = "/index.html"
+  status = 301
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
