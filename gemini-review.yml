@@ -1,0 +1,23 @@
+name: Gemini PR Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Gemini CLI
+        run: npm install -g @google/gemini-cli
+
+      - name: Analyze PR
+        run: gemini "Review the code changes in this PR and point out potential bugs or improvements."
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
