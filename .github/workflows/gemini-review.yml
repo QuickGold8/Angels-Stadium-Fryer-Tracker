@@ -18,6 +18,6 @@ jobs:
         run: npm install -g @google/gemini-cli
 
       - name: Analyze Code
-        run: gemini "Review the changes in this repository and suggest any improvements for HTML or JavaScript files."
+        run: gemini --skip-trust -p "Review the code changes in this repository and suggest any improvements for HTML or JavaScript files."
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
