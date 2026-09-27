@@ -185,40 +185,61 @@
         .action-btn:active { opacity: 0.75; }
         .cloud-btn { background: var(--accent-green); }
 
-        /* AI Quick Dictate / Log Bar */
-        .quick-log-bar {
-            background: #18221c;
-            border: 1px solid #234d31;
+         /* AI Quick Dictate Bar */
+        .ai-quick-bar {
+            background: #18181b;
+            border: 1px solid #09700c;
             border-radius: var(--box-radius-md);
-            padding: 7px 10px;
-            margin-bottom: 10px;
+            padding: 8px 10px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .ai-quick-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-accent-lightgreen);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .ai-quick-input-group {
             display: flex;
             gap: 6px;
-            align-items: center;
         }
-        .quick-log-input {
+        .ai-quick-input {
             flex: 1;
-            background: #121915;
-            border: 1px solid #2d5a3c;
+            background: #27272a;
             color: #ffffff;
-            font-size: 12px;
-            padding: 5px 8px;
+            border: 1px solid #09700c;
             border-radius: var(--box-radius-sm);
+            padding: 7px 10px;
+            font-size: 12px;
             outline: none;
         }
-        .quick-log-input::placeholder { color: #5a8a69; }
-        .quick-log-btn {
-            background: #1ba829;
-            color: #ffffff;
-            border: none;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 6px 10px;
-            border-radius: var(--box-radius-sm);
-            cursor: pointer;
-            white-space: nowrap;
+        .ai-quick-input:focus { border-color: var(--text-accent-lightgreen); }
+        .ai-quick-chips {
+            display: flex;
+            gap: 5px;
+            overflow-x: auto;
+            padding-bottom: 2px;
         }
-
+        .ai-chip {
+            background: #222;
+            color: #a1a1aa;
+            border: 1px solid #09700c;
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .ai-chip:hover { color: #fff; border-color: var(--text-accent-lightgreen); }
+      
         /* Secret Menu Admin Panel */
         .admin-panel {
             display: none;
