@@ -17,6 +17,11 @@ jobs:
       - name: Install Gemini CLI
         run: npm install -g @google/gemini-cli
 
+      - name: Configure Gemini Trusted Workspace
+        run: |
+          mkdir -p ~/.gemini
+          echo "{\"$PWD\": true}" > ~/.gemini/trustedFolders.json
+
       - name: Analyze Code
         run: gemini --skip-trust "Review the changes in this repository and suggest any improvements for HTML or JavaScript files."
         env:
