@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+ <title>Angels Stadium Fryers</title>
+
+ <!-- iOS Standalone Web App Capabilities -->
+ <meta name="apple-mobile-web-app-capable" content="yes">
+ <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <meta name="apple-mobile-web-app-title" content="Filta Tracker">
+
+ <!-- Home Screen Icons -->
+ <link rel="apple-touch-icon" href="angelsfilta3dicon.png">
+ <link rel="icon" href="angelsfilta3dicon.png">
+
+ <!-- Cache Busting -->
+ <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+ <meta http-equiv="Pragma" content="no-cache">
+ <meta http-equiv="Expires" content="0">
+
+ <!-- Android / Chrome Web App Support -->
+ <meta name="mobile-web-app-capable" content="yes">
+ <meta name="theme-color" content="#121212">
+
+ <style>
+ /* =======================================================
+ EASY EDIT: CSS VARIABLES
+ ======================================================= */
+ :root {
+ --app-font-family: -apple-system, BlinkMacSystemFont, Segoe UI, "Roboto", Helvetica, Arial, sans-serif;
+ --bg-body: #121212;
+ --bg-control-bar: #1e1e1e;
+ --bg-dashboard: #1e1e1e;
+ --bg-card: #1e1e1e;
+ --bg-card-completed: #152419;
+ --bg-card-ns: #1a1a1a;
+ --bg-subbox: #262626;
+ --bg-admin: #222222;
+ 
+ --text-main: #09700c;
+ --text-muted: #09700c;
+ --text-heading: #09700c;
+ --text-accent-blue: #0479cb;
+ --text-accent-green: #1ba829;
+ --text-accent-lightgreen: #7cbb4e;
+ 
+ --border-color: #09700c;
+ --border-completed: #34c759;
+ --border-ns: #ba0021;
+ 
+ --accent-blue: #007aff;
+ --accent-green: #34c759;
+ --accent-gold: #ff9500;
+ --accent-red: #ff3b30;
+ --accent-purple: #950fba;
+ 
+ --box-radius-md: 8px;
+ --box-radius-sm: 5px;
+ }
+
+ /* Base layout */
+ body {
+ font-family: var(--app-font-family);
+ background-color: var(--bg-body);
+ color: var(--text-main);
+ margin: 0;
+ padding-top: max(10px, env(safe-area-inset-top));
+ padding-bottom: max(20px, env(safe-area-inset-bottom));
+ padding-left: max(10px, env(safe-area-inset-left));
+ padding-right: max(10px, env(safe-area-inset-right));
+ box-sizing: border-box;
+ -webkit-tap-highlight-color: transparent;
+ }
+
+ /* Header Container */
+ .header-container {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ gap: 8px;
+ cursor: pointer;
+ user-select: none;
+ margin: 4px 0 8px 0;
+ text-align: center;
+ }
+ .header-logo-wrapper {
+ background-color: #000000;
+ padding: 4px;
+ border-radius: 6px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ border: 1px solid #333333;
+ }
+ .header-logo {
+ height: 22px;
+ max-width: 32px;
+ object-fit: contain;
+ display: block;
+ }
+ h1 {
+ font-size: 21px;
+ margin: 0;
+ color: var(--text-accent-blue);
+ font-weight: 800;
+ letter-spacing: -0.3px;
+ }
+ .sub-header-tag {
+ font-size: 10px;
+ font-weight: 700;
+ color: var(--text-accent-lightgreen);
+ text-transform: uppercase;
+ letter-spacing: 0.8px;
+ }
+ .live-clock-badge {
+ font-size: 11px;
+ font-weight: 700;
+ color: #5ac8fa;
+ background: #1a2228;
+ border: 1px solid #005a9c;
+ padding: 2px 7px;
+ border-radius: 4px;
+ margin-top: 3px;
+ display: inline-block;
+ }
+ .print-header { display: none; }
+
+ /* Control Bar */
+ .control-bar {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ background: var(--bg-control-bar);
+ padding: 8px 12px;
+ border-radius: var(--box-radius-md);
+ border: 1px solid var(--border-color);
+ margin-bottom: 10px;
+ flex-wrap: wrap;
+ gap: 8px;
+ }
+ .control-group {
+ display: flex;
+ align-items: center;
+ gap: 6px;
+ font-size: 12px;
+ font-weight: 600;
+ color: var(--text-muted);
+ }
+ .control-bar select, 
+ .control-bar input[type="date"] {
+ background: #2a2a2a;
+ color: #fff;
+ border: 1px solid #12ae00;
+ padding: 5px 8px;
+ border-radius: var(--box-radius-sm);
+ font-size: 13px;
+ font-weight: 600;
+ outline: none;
+ }
+ .action-btn {
+ background: var(--accent-blue);
+ color: white;
+ border: none;
+ padding: 6px 12px;
+ border-radius: var(--box-radius-sm);
+ font-weight: 700;
+ cursor: pointer;
+ font-size: 12px;
+ display: inline-flex;
+ align-items: center;
+ gap: 4px;
+ }
+ .action-btn:active { opacity: 0.75; }
+ .cloud-btn { background: var(--accent-green); }
+
+ /* Secret Menu Admin Panel */
+ .admin-panel {
+ display: none;
+ background: var(--bg-admin);
+ border: 1px solid var(--accent-green);
+ padding: 12px;
+ border-radius: var(--box-radius-md);
+ margin-bottom: 14px;
+ }
+ .admin-panel.visible { display: block; }
+ .admin-panel h3 {
+ margin: 0 0 8px 0;
+ color: var(--accent-gold);
+ font-size: 14px;
+ text-transform: uppercase;
+ letter-spacing: 0.5px;
+ }
+ .admin-form {
+ display: flex;
+ gap: 6px;
+ margin-bottom: 8px;
+ flex-wrap: wrap;
+ }
+ .admin-form input, 
+ .admin-form select {
+ background: #181818;
+ color: #12ab00;
+ border: 1px solid #09700c;
+ padding: 5px 8px;
+ border-radius: var(--box-radius-sm);
+ font-size: 12px;
+ flex: 1;
+ min-width: 100px;
+ }
+ .admin-stand-list-item {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ background: #1c1c1e;
+ padding: 5px 8px;
+ border-radius: var(--box-radius-sm);
+ margin-bottom: 4px;
+ font-size: 12px;
+ border: 1px solid #09700c;
+ }
+ .admin-stand-actions { display: flex; gap: 4px; }
+ .admin-btn-sm {
+ background: #333;
+ color: #fff;
+ border: 1px solid #09700c;
+ padding: 2px 6px;
+ border-radius: 3px;
+ cursor: pointer;
+ font-size: 11px;
+ font-weight: 700;
+ }
+ .admin-btn-danger {
+ background: #990000;
+ border-color: #ff3b30;
+ }
+
+ /* Summary Dashboard */
+ .dashboard {
+ background: var(--bg-dashboard);
+ border: 1px solid var(--border-color);
+ border-radius: var(--box-radius-md);
+ padding: 8px 10px;
+ margin-bottom: 12px;
+ }
+ .dashboard-title {
+ font-size: 11px;
+ font-weight: 700;
+ margin-bottom: 6px;
+ color: var(--text-muted);
+ text-transform: uppercase;
+ letter-spacing: 0.8px;
+ text-align: center;
+ }
+ .stats-grid {
+ display: grid;
+ grid-template-columns: 1fr 1fr 1.1fr;
+ gap: 6px;
+ }
+ .stat-category {
+ background: var(--bg-subbox);
+ padding: 6px 8px;
+ border-radius: var(--box-radius-sm);
+ text-align: center;
+ }
+ .stat-cat-title {
+ color: var(--accent-purple);
+ font-size: 11px;
+ font-weight: 700;
+ margin-bottom: 2px;
+ }
+ .title-50 { color: var(--accent-gold); }
+ .title-80 { color: #5ac8fa; }
+ .stat-row {
+ font-size: 12px;
+ display: flex;
+ justify-content: space-between;
+ margin-top: 1px;
+ font-weight: 600;
+ }
+ .oil-total-box {
+ background: var(--bg-subbox);
+ padding: 6px 8px;
+ border-radius: var(--box-radius-sm);
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ font-size: 11px;
+ font-weight: 700;
+ color: var(--accent-gold);
+ }
+
+ /* Level Section Headers */
+ .level-header {
+ font-size: 14px;
+ font-weight: 800;
+ margin: 14px 0 6px 0;
+ color: var(--accent-purple);
+ border-bottom: 1px solid var(--border-color);
+ padding-bottom: 3px;
+ text-transform: uppercase;
+ letter-spacing: 0.5px;
+ }
+
+ /* Compressed Card Layout */
+ .card {
+ background: var(--bg-card);
+ border: 1px solid var(--border-color);
+ border-radius: var(--box-radius-md);
+ padding: 7px 10px;
+ margin-bottom: 7px;
+ transition: border-color 0.15s, background-color 0.15s;
+ }
+ .card.completed {
+ border-left: 5px solid var(--border-completed);
+ background: var(--bg-card-completed);
+ }
+ .card.is-ns {
+ border-left: 5px solid var(--border-ns);
+ background: var(--bg-card-ns);
+ opacity: 0.7;
+ }
+ .card.validation-error {
+ outline: 3px solid var(--accent-red);
+ box-shadow: 0 0 10px rgba(255, 59, 48, 0.5);
+ }
+
+ .card-top {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 3px;
+ }
+ .stand-left {
+ display: flex;
+ align-items: center;
+ gap: 7px;
+ }
+ .card-checkbox {
+ width: 17px;
+ height: 17px;
+ accent-color: var(--accent-green);
+ cursor: pointer;
+ margin: 0;
+ }
+ .stand-title {
+ font-size: 15px;
+ font-weight: 700;
+ color: #7cbb4e;
+ letter-spacing: -0.2px;
+ }
+ .badge {
+ font-size: 11px;
+ padding: 1px 6px;
+ border-radius: 4px;
+ font-weight: 700;
+ display: inline-block;
+ }
+ .badge-50 {
+ background: rgba(255, 149, 0, 0.15);
+ color: var(--accent-gold);
+ border: 1px solid var(--accent-gold);
+ }
+ .badge-80 {
+ background: rgba(90, 200, 250, 0.15);
+ color: #5ac8fa;
+ border: 1px solid #5ac8fa;
+ }
+ .badge-75 {
+ background: #2a2a2a;
+ color: #aaa;
+ border: 1px solid #444;
+ }
+ .card-row {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-top: 3px;
+ }
+ .info-text {
+ color: var(--text-muted);
+ font-size: 12px;
+ font-weight: 600;
+ }
+ .input-group {
+ display: flex;
+ align-items: center;
+ gap: 3px;
+ }
+ .stepper-btn {
+ background: #2e2e30;
+ color: #ffffff;
+ border: 1px solid var(--text-accent-green);
+ width: 28px;
+ height: 26px;
+ border-radius: var(--box-radius-sm);
+ font-size: 16px;
+ font-weight: 700;
+ cursor: pointer;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ user-select: none;
+ padding: 0;
+ }
+ .stepper-btn:active { background: #444; }
+ .card-row input[type="tel"], 
+ .card-row input[type="text"] {
+ width: 44px;
+ height: 26px;
+ box-sizing: border-box;
+ background: #2a2a2a;
+ color: #ffffff;
+ border: 1px solid var(--text-accent-green);
+ text-align: center;
+ padding: 0 3px;
+ border-radius: var(--box-radius-sm);
+ font-size: 13px;
+ font-weight: 700;
+ outline: none;
+ }
+ .card-row input:focus { border-color: var(--text-accent-lightgreen); }
+ .error-input {
+ border-color: var(--accent-red) !important;
+ background: #2c1616 !important;
+ }
+ 
+ .ns-toggle-btn {
+ background: #2a2a2a;
+ color: #888;
+ border: 1px solid var(--text-accent-green);
+ padding: 2px 6px;
+ border-radius: 4px;
+ font-size: 11px;
+ cursor: pointer;
+ font-weight: 800;
+ letter-spacing: 0.4px;
+ }
+ .ns-toggle-btn.active {
+ background: var(--accent-red);
+ color: white;
+ border-color: var(--accent-red);
+ }
+
+ /* Per-Stand Comment Trigger Button & Note Snippet */
+ .stand-bottom-actions {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ margin-top: 5px;
+ padding-top: 4px;
+ border-top: 1px dotted #333;
+ }
+ .stand-comment-btn {
+ background: #242424;
+ border: 1px solid #444;
+ color: #a1a1aa;
+ font-size: 11px;
+ font-weight: 600;
+ padding: 3px 8px;
+ border-radius: 4px;
+ cursor: pointer;
+ display: inline-flex;
+ align-items: center;
+ gap: 4px;
+ }
+ .stand-comment-btn.has-note {
+ background: #1c2b1e;
+ border-color: var(--accent-green);
+ color: #85e08b;
+ font-weight: 700;
+ }
+ .stand-comment-preview {
+ font-size: 11px;
+ color: #aaa;
+ font-style: italic;
+ max-width: 65%;
+ white-space: nowrap;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ }
+
+ /* General Comments Block */
+ .comments-block {
+ margin-top: 2px;
+ background: var(--bg-card);
+ border: 1px solid var(--border-color);
+ border-radius: var(--box-radius-md);
+ padding: 3px;
+ }
+ .comments-block h3 {
+ margin: 0 0 0px 0;
+ font-size: 3px;
+ color: var(--accent-green);
+ text-transform: uppercase;
+ }
+ #general-comments {
+ width: 75%;
+ height: 1px;
+ background: #2a2a2a;
+ color: #fff;
+ border: 1px solid var(--border-color);
+ border-radius: 2px;
+ padding: 1px;
+ font-size: 2px;
+ font-family: inherit;
+ box-sizing: border-box;
+ resize: stretch;
+ outline: none;
+ }
+ .comment-actions-row {
+ display: flex;
+ gap: 6px;
+ margin-top: 10px;
+ flex-wrap: wrap;
+ }
+ .comment-action-btn {
+ flex: 1;
+ min-width: 90px;
+ background: #2a2a2a;
+ color: #fff;
+ border: 1px solid var(--border-color);
+ padding: 8px 10px;
+ border-radius: var(--box-radius-sm);
+ font-size: 11px;
+ font-weight: 700;
+ cursor: pointer;
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ gap: 4px;
+ }
+ .comment-action-btn:active { background: #383838; }
+
+ /* Footer */
+ .app-footer {
+ margin-top: 20px;
+ text-align: center;
+ padding: 10px 0;
+ border-top: 1px solid #333;
+ }
+ .footer-logo-wrapper {
+ background-color: #000000;
+ padding: 6px 12px;
+ border-radius: 6px;
+ display: inline-block;
+ margin-bottom: 6px;
+ border: 1px solid #333333;
+ }
+ .footer-logo {
+ max-height: 28px;
+ max-width: 115px;
+ width: auto;
+ height: auto;
+ object-fit: contain;
+ display: block;
+ }
+ .footer-caption {
+ font-size: 10px;
+ color: #09700c;
+ text-transform: uppercase;
+ letter-spacing: 0.5px;
+ }
+
+ /* Modal Overlays */
+ .modal-overlay {
+ position: fixed;
+ top: 0; left: 0; width: 100%; height: 100%;
+ background: rgba(0,0,0,0.85);
+ display: none;
+ justify-content: center;
+ align-items: center;
+ z-index: 999;
+ padding: 16px;
+ box-sizing: border-box;
+ }
+ .modal-content {
+ background: var(--bg-control-bar);
+ border: 1px solid var(--border-color);
+ border-radius: var(--box-radius-md);
+ padding: 18px;
+ width: 90%;
+ max-width: 360px;
+ text-align: left;
+ box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+ }
+ .modal-content h3 { margin: 0 0 8px 0; color: #fff; font-size: 15px; }
+ .modal-content p { color: var(--text-muted); font-size: 12px; margin-bottom: 14px; }
+ .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+ .btn-cancel {
+ background: #333; color: #fff; border: none;
+ padding: 8px 14px; border-radius: var(--box-radius-sm);
+ font-weight: bold; cursor: pointer;
+ }
+ .btn-confirm {
+ background: var(--accent-green); color: #fff; border: none;
+ padding: 8px 14px; border-radius: var(--box-radius-sm);
+ font-weight: bold; cursor: pointer;
+ }
+ .btn-danger {
+ background: #b01b1b; color: #fff; border: none;
+ padding: 8px 12px; border-radius: var(--box-radius-sm);
+ font-weight: bold; cursor: pointer;
+ }
+ 
+ /* Quick comment tags in modal */
+ .quick-tag-wrap {
+ display: flex;
+ gap: 4px;
+ flex-wrap: wrap;
+ margin: 8px 0;
+ }
+ .quick-tag-chip {
+ background: #1f2923;
+ border: 1px solid #23653b;
+ color: #85e08b;
+ font-size: 10px;
+ padding: 3px 6px;
+ border-radius: 4px;
+ cursor: pointer;
+ }
+ .quick-tag-chip:active { opacity: 0.6; }
+
+ /* Print Styles */
+ @media print {
+ body { background: white; color: black; padding: 0; }
+ .control-bar, .admin-panel, .dashboard, .action-btn, .stepper-btn, .ns-toggle-btn, input[type="checkbox"], .app-footer, .comment-actions-row, .stand-bottom-actions { display: none !important; }
+ h1 { color: black; font-size: 18px; text-align: left; }
+ .sub-header-tag { color: black; }
+ .card { border: 1px solid #ccc; background: white !important; break-inside: avoid; margin-bottom: 6px; padding: 8px; }
+ .stand-title, .level-header { color: black !important; }
+ .badge { border: 1px solid #000; color: black !important; background: none !important; }
+ .print-header { display: block; font-size: 14px; font-weight: bold; margin-bottom: 10px; }
+ .card-row input { border: none; background: transparent; color: black; padding: 0; text-align: right; }
+ }
+ </style>
+</head>
+<body>
+
+ <div class="print-header" id="print-date-label"></div>
+
+ <div class="header-container" onclick="handleTitleClick()">
+ <div class="header-logo-wrapper">
+ <img src="angelslogo.png" class="header-logo" alt="Logo" onerror="this.src='angelslogo.png'; this.onerror=null;">
+ </div>
+ <div>
+ <h1>Angel's Stadium</h1>
+ <div class="sub-header-tag">Service Tracker</div>
+ <div><span class="live-clock-badge" id="live-time-display">--:--:-- --</span></div>
+ </div>
+ </div>
+
+ <!-- Top Control Bar -->
+ <div class="control-bar">
+ <div class="control-group">
+ <label for="technician-select">👤Tech:</label>
+ <select id="technician-select" onchange="changeTech(this.value)"></select>
+ </div>
+ <div class="control-group">
+ <label for="shift-date">📅 Date:</label>
+ <input type="date" id="shift-date" onchange="changeDate(this.value)">
+ </div>
+ <div class="control-group">
+ <button class="action-btn" onclick="printReport()">🖨️ Print</button>
+ <button class="action-btn cloud-btn" onclick="validateBeforeSubmit()">☁️ Submit</button>
+ </div>
+ </div>
+
+ <!-- Hidden Admin Panel (Login-Guarded) -->
+ <div class="admin-panel" id="admin-panel">
+ <h3>Secret Menu: Configuration & Executive Suite</h3>
+ <div id="admin-login-box">
+ <div style="font-size: 11px; color: #aaa; margin-bottom: 6px;">Enter admin password to unlock management suite:</div>
+ <div class="admin-form">
+ <input type="password" id="admin-secret-pass" placeholder="Password (default: filta2026)">
+ <button class="action-btn" onclick="verifyAdminLogin()">Unlock</button>
+ </div>
+ </div>
+ <div id="admin-tools-box" style="display: none;">
+ <div class="admin-form">
+ <input type="text" id="new-level-name" placeholder="New Level Name">
+ <button class="action-btn" onclick="addLevel()">Add Level</button>
+ </div>
+ <div class="admin-form">
+ <select id="select-level" onchange="populateAdminStandsList()"></select>
+ </div>
+ 
+ <!-- Stand Editor -->
+ <div class="admin-form">
+ <input type="text" id="new-stand-id" placeholder="Stand ID">
+ <select id="new-stand-size">
+ <option value="50">50 lb</option>
+ <option value="80">80 lb</option>
+ <option value="75">75 lb</option>
+ </select>
+ <input type="number" id="new-stand-total" placeholder="Max" min="1" style="max-width: 60px;">
+ <button class="action-btn" onclick="addStand()">Add Stand</button>
+ </div>
+ <div id="admin-stands-container" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px;"></div>
+
+ <!-- Technician Editor -->
+ <hr style="border-color: #444; margin-top: 15px;">
+ <h3>Manage Technicians</h3>
+ <div class="admin-form">
+ <input type="text" id="new-tech-name" placeholder="Technician Name">
+ <button class="action-btn" onclick="addTech()">Add Tech</button>
+ </div>
+ <div id="admin-tech-container" style="max-height: 150px; overflow-y: auto; margin-bottom: 12px;"></div>
+ <button class="admin-btn-sm admin-btn-danger" onclick="lockAdminSuite()">Lock Secret Menu</button>
+ </div>
+ </div>
+
+ <!-- Summary Dashboard -->
+ <div class="dashboard">
+ <div class="dashboard-title">Shift Subtotals</div>
+ <div class="stats-grid">
+ <div class="stat-category">
+ <div class="stat-cat-title title-50">50 lb Fryers</div>
+ <div class="stat-row"><span>Filtered:</span> <span id="f50-val">0</span></div>
+ <div class="stat-row"><span>Changed:</span> <span id="d50-val">0</span></div>
+ </div>
+ <div class="stat-category">
+ <div class="stat-cat-title title-80">80 lb Fryers</div>
+ <div class="stat-row"><span>Filtered:</span> <span id="f80-val">0</span></div>
+ <div class="stat-row"><span>Changed:</span> <span id="d80-val">0</span></div>
+ </div>
+ <div class="oil-total-box">
+ <div>TOTAL OIL</div>
+ <div style="font-size: 18px; margin-top: 2px;"><span id="total-oil-val">0</span> <span style="font-size: 10px;">gal</span></div>
+ </div>
+ </div>
+ </div>
+
+ <!-- Main Content Container -->
+ <div id="app"></div>
+
+ <!-- General Comments Section -->
+ <div class="comments-block">
+ <h3>Overall Shift Summary (Optional)</h3>
+ <textarea id="general-comments" placeholder="General overall notes for shift (individual stand notes should be added directly to the stand cards above)..." oninput="saveComments()"></textarea>
+ <div class="comment-actions-row">
+ <button class="comment-action-btn" onclick="printReport()">📄 Print Preview</button>
+ <button class="comment-action-btn" style="background: var(--accent-green);" onclick="validateBeforeSubmit()">☁️ Review & Submit</button>
+ <button class="comment-action-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">⬆️ Scroll to Top</button>
+ </div>
+ </div>
+
+ <!-- Footer -->
+ <footer class="app-footer">
+ <div class="footer-logo-wrapper">
+ <img src="filtaoclogo.png" alt="Filta Logo" class="footer-logo" onerror="this.src='filtaoclogo.png'; this.onerror=null;">
+ </div>
+ <div><span class="footer-caption">Filta™ & FiltaOC®</span></div>
+ </footer>
+
+ <!-- Submission Confirmation Modal -->
+ <div id="confirm-modal" class="modal-overlay">
+ <div class="modal-content">
+ <h3>Confirm Submission</h3>
+ <p id="confirm-modal-desc">Are you sure your logs are correct and accurate?</p>
+ <div class="modal-actions">
+ <button class="btn-cancel" onclick="closeModal()">Go Back</button>
+ <button id="modal-submit-btn" class="btn-confirm" onclick="executeCloudSubmit()">SUBMIT</button>
+ </div>
+ </div>
+ </div>
+
+ <!-- Per-Stand Comment Pop-up Modal -->
+ <div id="stand-comment-modal" class="modal-overlay">
+ <div class="modal-content">
+ <h3 id="stand-modal-title">Stand Comments</h3>
+ <div style="font-size: 11px; color:#aaa; margin-bottom: 6px
