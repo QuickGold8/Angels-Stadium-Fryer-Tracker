@@ -1,3 +1,4 @@
+.cm-gap
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,114 +55,131 @@
             --accent-gold: #ff9500;
             --accent-red: #ff3b30;
             --accent-purple: #950fba;
+            --accent-angels: #9B1634;
             
             --box-radius-md: 8px;
             --box-radius-sm: 5px;
         }
 
-        /* Safe area aware base layout */
-        body {
-            font-family: var(--app-font-family);
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            margin: 0;
-            padding-top: max(10px, env(safe-area-inset-top));
-            padding-bottom: max(20px, env(safe-area-inset-bottom));
-            padding-left: max(10px, env(safe-area-inset-left));
-            padding-right: max(10px, env(safe-area-inset-right));
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+       /* Safe area aware base layout */
+body {
+    font-family: var(--app-font-family);
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    margin: 0;
+    padding-top: max(10px, env(safe-area-inset-top));
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+    padding-left: max(10px, env(safe-area-inset-left));
+    padding-right: max(10px, env(safe-area-inset-right));
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
 
-        /* Header Container with Black Icon Box Wrapper */
-        .header-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-            user-select: none;
-            margin: 4px 0 10px 0;
-            text-align: center;
-        }
-        .header-logo-wrapper {
-            background-color: #000000;
-            padding: 4px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #333333;
-        }
-        .header-logo {
-            height: 22px;
-            max-width: 32px;
-            object-fit: contain;
-            display: block;
-        }
-        h1 {
-            font-size: 21px;
-            margin: 0;
-            color: var(--text-accent-blue);
-            font-weight: 800;
-            letter-spacing: -0.3px;
-        }
-        .sub-header-tag {
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--text-accent-lightgreen);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
-        .print-header { display: none; }
+/* Header Container with Black Icon Box Wrapper */
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    margin: 4px 0 10px 0;
+    text-align: center;
+}
 
-        /* Control Bar */
-        .control-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--bg-control-bar);
-            padding: 8px 12px;
-            border-radius: var(--box-radius-md);
-            border: 1px solid var(--border-color);
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .control-group {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-        .control-bar select, 
-        .control-bar input[type="date"] {
-            background: #2a2a2a;
-            color: #fff;
-            border: 1px solid #12ae00;
-            padding: 5px 8px;
-            border-radius: var(--box-radius-sm);
-            font-size: 13px;
-            font-weight: 600;
-            outline: none;
-        }
-        .action-btn {
-            background: var(--accent-blue);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: var(--box-radius-sm);
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 12px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .action-btn:active { opacity: 0.75; }
-        .cloud-btn { background: var(--accent-green); }
+.header-logo-wrapper {
+    background-color: #000000;
+    padding: 4px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #333333;
+}
+
+.header-logo {
+    height: 32px;
+    max-width: 42px;
+    object-fit: contain;
+    display: block;
+}
+
+h1 {
+    font-size: 21px;
+    margin: 0;
+    color: var(--text-accent-blue);
+    font-weight: 800;
+    letter-spacing: -0.3px;
+}
+
+.sub-header-tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-accent-lightgreen);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.print-header { 
+    display: none; 
+}
+
+/* Control Bar */
+.control-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-control-bar);
+    padding: 8px 12px;
+    border-radius: var(--box-radius-md);
+    border: 1px solid var(--border-color);
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.control-bar select, 
+.control-bar input[type="date"] {
+    background: #2a2a2a;
+    color: #fff;
+    border: 1px solid #12ae00;
+    padding: 5px 8px;
+    border-radius: var(--box-radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    outline: none;
+}
+
+.action-btn {
+    background: var(--accent-blue);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: var(--box-radius-sm);
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.action-btn:active { 
+    opacity: 0.75; 
+}
+
+.cloud-btn { 
+    background: var(--accent-green); 
+}
 
         /* Secret Menu Admin Panel */
         .admin-panel {
@@ -175,7 +193,7 @@
         .admin-panel.visible { display: block; }
         .admin-panel h3 {
             margin: 0 0 8px 0;
-            color: var(--accent-gold);
+            color: var(--accent-angels);
             font-size: 14px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -231,7 +249,47 @@
             border-radius: var(--box-radius-md);
             padding: 8px 10px;
             margin-bottom: 12px;
+            
+            /* Sticky Header Config */
+            position: sticky;
+            top: max(10px, env(safe-area-inset-top)); /* Respect iOS notch */
+            z-index: 100;
+            transition: all 0.25s ease;
         }
+
+        /* Scrolled (Compact) State */
+        .dashboard.scrolled {
+            padding: 4px 8px;
+            margin-bottom: 8px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.85); /* Drop shadow when floating */
+            border-color: var(--text-accent-lightgreen);
+        }
+        .dashboard.scrolled .dashboard-title {
+            display: none; /* Hide title to save vertical space */
+        }
+        .dashboard.scrolled .stat-category {
+            padding: 2px 4px;
+        }
+        .dashboard.scrolled .stat-cat-title {
+            font-size: 10px;
+            margin-bottom: 0;
+        }
+        .dashboard.scrolled .stat-row {
+            font-size: 10px;
+        }
+        .dashboard.scrolled .oil-total-box {
+            padding: 2px 4px;
+            flex-direction: row; /* Horizontal layout */
+            gap: 8px;
+        }
+        .dashboard.scrolled .oil-total-box > div:first-child {
+            font-size: 9px;
+        }
+        .dashboard.scrolled .oil-total-box > div:last-child {
+            font-size: 14px !important;
+            margin-top: 0 !important;
+        }
+    
         .dashboard-title {
             font-size: 11px;
             font-weight: 700;
@@ -287,7 +345,7 @@
             margin: 14px 0 6px 0;
             color: var(--accent-purple);
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 3px;
+            padding-bottom: 1px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -358,7 +416,7 @@
             color: #5ac8fa;
             border: 1px solid #5ac8fa;
         }
-        .badge-other {
+        .badge-75 {
             background: #2a2a2a;
             color: #aaa;
             border: 1px solid #444;
@@ -434,7 +492,7 @@
             border-color: var(--accent-red);
         }
         .note-btn {
-            background: #2a2a2a;
+            background: #000000;
             color: #dfe6e9;
             border: 1px solid #09700c;
             border-radius: 4px;
@@ -464,20 +522,6 @@
             color: var(--accent-green);
             text-transform: uppercase;
         }
-        #general-comments {
-            width: 100%;
-            height: 60px;
-            background: #2a2a2a;
-            color: #fff;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            padding: 6px;
-            font-size: 12px;
-            font-family: inherit;
-            box-sizing: border-box;
-            resize: vertical;
-            outline: none;
-        }
         .comment-actions-row {
             display: flex;
             gap: 6px;
@@ -501,61 +545,6 @@
             gap: 4px;
         }
         .comment-action-btn:active { background: #383838; }
-
-        /* AI Quick Dictate Bar */
-        .ai-quick-bar {
-            background: #18181b;
-            border: 1px solid #09700c;
-            border-radius: var(--box-radius-md);
-            padding: 8px 10px;
-            margin-bottom: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .ai-quick-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-accent-lightgreen);
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-        .ai-quick-input-group {
-            display: flex;
-            gap: 6px;
-        }
-        .ai-quick-input {
-            flex: 1;
-            background: #27272a;
-            color: #ffffff;
-            border: 1px solid #09700c;
-            border-radius: var(--box-radius-sm);
-            padding: 7px 10px;
-            font-size: 12px;
-            outline: none;
-        }
-        .ai-quick-input:focus { border-color: var(--text-accent-lightgreen); }
-        .ai-quick-chips {
-            display: flex;
-            gap: 5px;
-            overflow-x: auto;
-            padding-bottom: 2px;
-        }
-        .ai-chip {
-            background: #222;
-            color: #a1a1aa;
-            border: 1px solid #09700c;
-            border-radius: 12px;
-            padding: 2px 8px;
-            font-size: 10px;
-            font-weight: 600;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-        .ai-chip:hover { color: #fff; border-color: var(--text-accent-lightgreen); }
 
         /* Footer with Black App Icon Box */
         .app-footer {
@@ -659,7 +648,7 @@
         /* Print Styles */
         @media print {
             body { background: white; color: black; padding: 0; }
-            .control-bar, .admin-panel, .dashboard, .action-btn, .stepper-btn, .ns-toggle-btn, input[type="checkbox"], .app-footer, .ai-quick-bar, .comment-actions-row { display: none !important; }
+            .control-bar, .admin-panel, .dashboard, .action-btn, .stepper-btn, .ns-toggle-btn, input[type="checkbox"], .app-footer, .comment-actions-row { display: none !important; }
             h1 { color: black; font-size: 18px; text-align: left; }
             .sub-header-tag { color: black; }
             .card { border: 1px solid #ccc; background: white !important; break-inside: avoid; margin-bottom: 6px; padding: 8px; }
@@ -700,34 +689,11 @@
         </div>
     </div>
 
-    <!-- AI Smart Dictate & Apply Bar -->
-    <div class="ai-quick-bar">
-        <div class="ai-quick-header">
-            <span>🎙️ AI Smart Dictate & Logger</span>
-            <span id="ai-quick-status" style="font-size: 10px; color: var(--text-muted);">gemini-3-flash</span>
-        </div>
-        <div class="ai-quick-input-group">
-            <input type="text" 
-                   id="ai-quick-text" 
-                   class="ai-quick-input" 
-                   placeholder="Say or type: e.g. 'Stand 223 filtered 4 dumped 2 used 3 gal'"
-                   onkeydown="if(event.key==='Enter') executeAiQuickLog()">
-            <button class="action-btn" style="background:#2a2a2a; border: 1px solid #444;" onclick="startDictation()" title="Dictate Speech">🎙️</button>
-            <button class="action-btn" id="ai-quick-parse-btn" style="background: var(--text-accent-lightgreen); color:#121212;" onclick="executeAiQuickLog()">Apply</button>
-        </div>
-        <div class="ai-quick-chips">
-            <span class="ai-chip" onclick="fillQuickChip('Stand #223 filtered 4 dumped 2 used 3 gal')">#223: 4 filter, 2 dump</span>
-            <span class="ai-chip" onclick="fillQuickChip('Main Kitchen dumped 3 used 4.5 gal oil')">Main Kitchen: 3 dump, 4.5 gal</span>
-            <span class="ai-chip" onclick="fillQuickChip('Pacifico 207 not serviced fryers were dirty')">Pacifico 207: NS Note</span>
-            <span class="ai-chip" onclick="fillQuickChip('Stand 130 filtered 6 used 0 oil done')">#130: 6 filter done</span>
-        </div>
-    </div>
-
     <!-- Hidden Admin Panel (Login-Guarded) -->
     <div class="admin-panel" id="admin-panel">
-        <h3>Secret Menu: Configuration & Executive Suite</h3>
+        <h3>Secret Menu: Levels, Stands, and Techs</h3>
         <div id="admin-login-box">
-            <div style="font-size: 11px; color: #aaa; margin-bottom: 6px;">Enter admin password to unlock management suite:</div>
+            <div style="font-size: 11px; color: #aaa; margin-bottom: 6px;">Log In to unlock menu:</div>
             <div class="admin-form">
                 <input type="password" id="admin-secret-pass" placeholder="Password (default: filta2026)">
                 <button class="action-btn" onclick="verifyAdminLogin()">Unlock</button>
@@ -826,8 +792,6 @@
     <script>
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyX8ubsFSCagEtWhk68tBBLlNK6qN_7ow2qVN0eNcVTo03eYcpi3M_CYkpOMMKABuVz/exec";
         const LOG_DELAY_MS = 20;
-        const GEMINI_API_KEY = window.GEMINI_API_KEY || "";
-        const GEMINI_TEXT_URL = GEMINI_API_KEY ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}` : "";
 
         // Helper to safely parse JSON from localStorage with robust error handling
         function getStoredJson(key, defaultVal) {
@@ -912,165 +876,8 @@
             saveLogs();
         }
 
-        /* --- Gemini 3 AI Apply Logger --- */
-        function fillQuickChip(text) {
-            const input = document.getElementById('ai-quick-text');
-            input.value = text;
-            input.focus();
-        }
 
-        function startDictation() {
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert("Speech recognition not supported in this browser. Please type your update.");
-                return;
-            }
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            const recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.interimResults = false;
-            recognition.lang = 'en-US';
-
-            const statusEl = document.getElementById('ai-quick-status');
-            statusEl.innerText = "Listening...";
-            statusEl.style.color = "var(--accent-red)";
-
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
-                document.getElementById('ai-quick-text').value = transcript;
-                statusEl.innerText = "gemini-3-flash";
-                statusEl.style.color = "var(--text-muted)";
-                executeAiQuickLog();
-            };
-
-            recognition.onerror = () => {
-                statusEl.innerText = "gemini-3-flash";
-                statusEl.style.color = "var(--text-muted)";
-                alert("Could not recognize voice. Please type your log.");
-            };
-
-            recognition.onend = () => {
-                statusEl.innerText = "gemini-3-flash";
-                statusEl.style.color = "var(--text-muted)";
-            };
-
-            recognition.start();
-        }
-
-        async function executeAiQuickLog() {
-            const textInput = document.getElementById('ai-quick-text');
-            const userText = textInput.value.trim();
-            if (!userText) {
-                alert("Enter a statement first (e.g. 'Stand 223 filtered 4 dumped 2').");
-                return;
-            }
-            if (!GEMINI_API_KEY || !GEMINI_TEXT_URL) {
-                alert("Gemini API key is not configured. Please enter the value manually or add the runtime key before using AI logging.");
-                return;
-            }
-
-            const parseBtn = document.getElementById('ai-quick-parse-btn');
-            const originalText = parseBtn.innerText;
-            parseBtn.innerHTML = `<span class="ai-spinner"></span>`;
-            parseBtn.disabled = true;
-
-            const allAvailableStands = [];
-            stadiumData.forEach(s => s.stands.forEach(st => allAvailableStands.push(st.id)));
-
-            const systemInstruction = `You are an AI assistant for Angels Stadium Fryer Service.
-Extract stand log updates from technicians' voice or typed notes into structured JSON.
-Available stands in stadium: ${JSON.stringify(allAvailableStands)}.
-Match the stand as accurately as possible to one of the available stand IDs (e.g. "223" -> "#223", "Pacifico" -> "Pacifico 207 (Front)").
-If not specified, leave counts or oil as null. If technician notes "NS" or "not serviced", set isNS to true.`;
-
-            const payload = {
-                contents: [{ role: "user", parts: [{ text: userText }] }],
-                system_instruction: { parts: [{ text: systemInstruction }] },
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "OBJECT",
-                        properties: {
-                            matchedStandId: { type: "STRING", description: "Exact stand ID from available list" },
-                            filterCount: { type: "INTEGER", nullable: true },
-                            dumpCount: { type: "INTEGER", nullable: true },
-                            oilUsed: { type: "NUMBER", nullable: true },
-                            isNS: { type: "BOOLEAN" },
-                            comments: { type: "STRING", nullable: true }
-                        },
-                        required: ["matchedStandId", "isNS"]
-                    }
-                }
-            };
-
-            try {
-                const response = await fetch(GEMINI_TEXT_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (!response.ok) throw new Error("AI request failed");
-                const result = await response.json();
-                const jsonText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-                if (!jsonText) throw new Error("No response data received.");
-                const parsed = JSON.parse(jsonText);
-
-                let matchedStand = null;
-                for (let sec of stadiumData) {
-                    for (let s of sec.stands) {
-                        if (s.id === parsed.matchedStandId) {
-                            matchedStand = s;
-                            break;
-                        }
-                    }
-                    if (matchedStand) break;
-                }
-
-                if (!matchedStand) {
-                    alert(`Could not match "${userText}" to a stadium stand.`);
-                    return;
-                }
-
-                let dayState = getCurrentDateState().stands;
-                if (!dayState[matchedStand.id]) {
-                    dayState[matchedStand.id] = { filter: '', dump: '', oil: '', done: false, isNS: false };
-                }
-
-                if (parsed.isNS) {
-                    dayState[matchedStand.id].isNS = true;
-                    dayState[matchedStand.id].filter = 'NS';
-                    dayState[matchedStand.id].dump = 'NS';
-                } else {
-                    dayState[matchedStand.id].isNS = false;
-                    if (parsed.filterCount !== null && parsed.filterCount !== undefined) {
-                        dayState[matchedStand.id].filter = String(parsed.filterCount);
-                    }
-                    if (parsed.dumpCount !== null && parsed.dumpCount !== undefined) {
-                        dayState[matchedStand.id].dump = String(parsed.dumpCount);
-                    }
-                }
-
-                if (parsed.oilUsed !== null && parsed.oilUsed !== undefined) {
-                    dayState[matchedStand.id].oil = String(parsed.oilUsed);
-                }
-                if (parsed.comments) {
-                    const currentGeneral = getCurrentDateState().generalComments || '';
-                    getCurrentDateState().generalComments = currentGeneral ? `${currentGeneral} | [${matchedStand.id}]: ${parsed.comments}` : `[${matchedStand.id}]: ${parsed.comments}`;
-                    document.getElementById('general-comments').value = getCurrentDateState().generalComments;
-                }
-                dayState[matchedStand.id].done = true;
-
-                saveLogs();
-                render();
-                textInput.value = '';
-            } catch (err) {
-                console.error("AI Quick Log Error:", err);
-                alert("AI couldn't parse statement. Try typing manually or check connection.");
-            } finally {
-                parseBtn.innerHTML = originalText;
-                parseBtn.disabled = false;
-            }
-        }
-
+        
         /* --- UI Rendering & Event Handlers --- */
         function render() {
             const app = document.getElementById('app');
@@ -1579,6 +1386,17 @@ If not specified, leave counts or oil as null. If technician notes "NS" or "not 
             closeNoteModal();
         }
 
+        // Sticky Dashboard Shrink on Scroll
+        window.addEventListener('scroll', () => {
+            const dashboard = document.querySelector('.dashboard');
+            // When user scrolls past 60px, trigger the compact state
+            if (window.scrollY > 60) {
+                dashboard.classList.add('scrolled');
+            } else {
+                dashboard.classList.remove('scrolled');
+            }
+        }, { passive: true });
+        
         // Initialize on load
         document.getElementById('general-comments').value = getCurrentDateState().generalComments || "";
         populateTechDropdown();
